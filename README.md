@@ -8,7 +8,42 @@
 - **Backend API**: [be-bankling](https://github.com/rozakgit/be-bankling.git)
 
 ## Tangkapan Layar (Screenshots)
-*(Tambahkan gambar tangkapan layar antarmuka aplikasi di bagian ini)*
+
+Berikut adalah antarmuka aplikasi Bankling:
+
+### Halaman Utama (Light & Dark Mode)
+<p float="left">
+  <img src="ss_halaman/halaman_homescreen_terang.png" width="30%" />
+  <img src="ss_halaman/halaman_home_screen_dark.png" width="30%" />
+</p>
+
+### Autentikasi & Keamanan
+<p float="left">
+  <img src="ss_halaman/halaman_daftar.png" width="30%" />
+  <img src="ss_halaman/halaman_email_otp.png" width="30%" />
+  <img src="ss_halaman/halaman_masukan_pin.png" width="30%" />
+  <img src="ss_halaman/halaman_kode_authenticator.png" width="30%" />
+</p>
+
+### Transaksi & Pembayaran
+<p float="left">
+  <img src="ss_halaman/halaman_topup_saldo.png" width="30%" />
+  <img src="ss_halaman/halaman_transfer.png" width="30%" />
+  <img src="ss_halaman/halaman_konfirmasi_pembayaran_dark.png" width="30%" />
+</p>
+
+### Riwayat & Keberhasilan
+<p float="left">
+  <img src="ss_halaman/halaman_transaksi_succes.png" width="30%" />
+  <img src="ss_halaman/halaman_checkout+berhasil.png" width="30%" />
+  <img src="ss_halaman/halaman_history_transaksi.png" width="30%" />
+</p>
+
+### Fitur Lainnya (Promo & Notifikasi)
+<p float="left">
+  <img src="ss_halaman/halaman_promo.png" width="30%" />
+  <img src="ss_halaman/halaman_notifikasi.png" width="30%" />
+</p>
 
 ## Fitur Utama
 
