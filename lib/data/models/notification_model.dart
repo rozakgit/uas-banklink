@@ -1,0 +1,34 @@
+import '../../domain/entities/notification_entity.dart';
+
+class NotificationModel extends NotificationEntity {
+  NotificationModel({
+    required super.id,
+    required super.userId,
+    required super.title,
+    required super.body,
+    required super.isRead,
+    required super.createdAt,
+  });
+
+  factory NotificationModel.fromJson(Map<String, dynamic> json) {
+    return NotificationModel(
+      id: json['id'],
+      userId: json['user_id'],
+      title: json['title'],
+      body: json['body'],
+      isRead: json['is_read'] ?? false,
+      createdAt: DateTime.parse(json['created_at']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'user_id': userId,
+      'title': title,
+      'body': body,
+      'is_read': isRead,
+      'created_at': createdAt.toIso8601String(),
+    };
+  }
+}
