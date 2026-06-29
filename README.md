@@ -19,6 +19,7 @@ Berikut adalah antarmuka aplikasi Bankling:
 
 ### Autentikasi & Keamanan
 <p float="left">
+  <img src="ss_halaman/halaman_login.png" width="30%" />
   <img src="ss_halaman/halaman_daftar.png" width="30%" />
   <img src="ss_halaman/halaman_email_otp.png" width="30%" />
   <img src="ss_halaman/halaman_masukan_pin.png" width="30%" />
