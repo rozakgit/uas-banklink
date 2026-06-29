@@ -225,10 +225,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBalanceCard(double balance, UserEntity? user) {
-    final String rawAccountNo = user?.accountNumber ?? "2362000";
-    final String accountNo = rawAccountNo.length == 7 
-        ? "${rawAccountNo.substring(0, 4)} ${rawAccountNo.substring(4)}" 
-        : rawAccountNo;
+    final String rawAccountNo = user?.accountNumber ?? "2362000000";
+    final String accountNo = rawAccountNo.length == 10 
+        ? "${rawAccountNo.substring(0, 4)} ${rawAccountNo.substring(4, 7)} ${rawAccountNo.substring(7)}" 
+        : (rawAccountNo.length == 7 ? "${rawAccountNo.substring(0, 4)} ${rawAccountNo.substring(4)}" : rawAccountNo);
 
     return Container(
       width: double.infinity,
