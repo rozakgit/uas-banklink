@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "928261239854-aan52pqq7ra4sof69t31g9t3bosngf99.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uas.bankling",
+            "certificate_hash": "20f2c161592fbb2875d699e9b21983bbf6578028"
+          }
+        },
+        {
           "client_id": "928261239854-h7bhcb5f6kd7ms0m6ge6m4q1cqevoj06.apps.googleusercontent.com",
           "client_type": 3
         }
