@@ -77,3 +77,7 @@ lib/
 
 ## Berkontribusi
 Semua commit dan modifikasi pada proyek ini diutamakan menggunakan struktur Conventional Commits. Jika Anda ingin menambahkan fitur, pastikan antarmuka UI mematuhi standar palet warna AppColors.bluePrimary dan font Inter agar konsisten dengan ekosistem Bankling.
+
+## Pengembang
+- **Nama**: Muhammad abdul Rozak
+- **NIM**: 1123150006
