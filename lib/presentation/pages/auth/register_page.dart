@@ -75,148 +75,203 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bg,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: IconButton(
-                icon: const Icon(DkgIcons.arrowLeft, color: Colors.white),
-                onPressed: () => context.go('/'),
+      body: Stack(
+        children: [
+          // Background Gradient & Abstract Shapes
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [AppColors.darkSurface, Color(0xFF0F172A)],
               ),
             ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(26, 10, 26, 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Buat akun',
-                        style: TextStyle(
-                          fontFamily: 'PlusJakartaSans',
-                          fontSize: 27,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                          letterSpacing: -0.4,
-                        )),
-                    const SizedBox(height: 6),
-                    const Text('Daftar gratis dalam 1 menit',
-                        style: TextStyle(fontSize: 14.5, color: Colors.white70)),
-                    const SizedBox(height: 22),
-                    const SizedBox(height: 20),
-                    AppField(
-                      label: 'Nama lengkap',
-                      value: _name,
-                      onChanged: (v) => setState(() => _name = v),
-                      placeholder: 'Nama Lengkap',
-                      prefixIcon: const Icon(DkgIcons.user, size: 20),
-                    ),
-                    const SizedBox(height: 14),
-                    AppField(
-                      label: 'Email',
-                      value: _email,
-                      onChanged: (v) => setState(() => _email = v),
-                      placeholder: 'nama@email.com',
-                      keyboardType: TextInputType.emailAddress,
-                      prefixIcon: const Icon(DkgIcons.mail, size: 20),
-                    ),
-                    const SizedBox(height: 14),
-                    AppField(
-                      label: 'Kata sandi',
-                      value: _pw,
-                      onChanged: (v) => setState(() => _pw = v),
-                      obscureText: !_showPw,
-                      placeholder: 'Min. 6 karakter',
-                      prefixIcon: const Icon(DkgIcons.lock, size: 20),
-                      suffixIcon: IconButton(
-                        icon: Icon(_showPw ? DkgIcons.eyeOff : DkgIcons.eye,
-                            size: 20, color: Colors.white54),
-                        onPressed: () => setState(() => _showPw = !_showPw),
-                      ),
-                    ),
-                    const SizedBox(height: 18),
-                    GestureDetector(
-                      onTap: () => setState(() => _agree = !_agree),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 150),
-                            width: 22,
-                            height: 22,
-                            decoration: BoxDecoration(
-                              color: _agree ? AppColors.neonGreen : Colors.transparent,
-                              borderRadius: BorderRadius.circular(7),
-                              border: Border.all(
-                                color: _agree ? AppColors.neonGreen : Colors.white54,
-                                width: 1.6,
+          ),
+          Positioned(
+            top: -100,
+            right: -50,
+            child: Container(
+              width: 300,
+              height: 300,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.bluePrimary.withOpacity(0.15),
+                boxShadow: [BoxShadow(color: AppColors.bluePrimary.withOpacity(0.2), blurRadius: 100, spreadRadius: 50)],
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -100,
+            left: -50,
+            child: Container(
+              width: 250,
+              height: 250,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color(0xFF7C3AED).withOpacity(0.15),
+                boxShadow: [BoxShadow(color: const Color(0xFF7C3AED).withOpacity(0.2), blurRadius: 100, spreadRadius: 50)],
+              ),
+            ),
+          ),
+
+          SafeArea(
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+                    onPressed: () => context.go('/'),
+                  ),
+                ),
+                Expanded(
+                  child: Center(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                      child: Container(
+                        padding: const EdgeInsets.all(28),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.03),
+                          borderRadius: BorderRadius.circular(32),
+                          border: Border.all(color: Colors.white.withOpacity(0.08)),
+                          boxShadow: [
+                            BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 30, spreadRadius: 5)
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text('Create Account',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.white,
+                                  letterSpacing: -0.5,
+                                )),
+                            const SizedBox(height: 8),
+                            const Text('Sign up for free in 1 minute',
+                                style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: Colors.white70)),
+                            const SizedBox(height: 32),
+                            AppField(
+                              label: 'Full Name',
+                              value: _name,
+                              onChanged: (v) => setState(() => _name = v),
+                              placeholder: 'Your Full Name',
+                              prefixIcon: const Icon(Icons.person_rounded, size: 20),
+                            ),
+                            const SizedBox(height: 16),
+                            AppField(
+                              label: 'Email Address',
+                              value: _email,
+                              onChanged: (v) => setState(() => _email = v),
+                              placeholder: 'nama@email.com',
+                              keyboardType: TextInputType.emailAddress,
+                              prefixIcon: const Icon(Icons.mail_rounded, size: 20),
+                            ),
+                            const SizedBox(height: 16),
+                            AppField(
+                              label: 'Password',
+                              value: _pw,
+                              onChanged: (v) => setState(() => _pw = v),
+                              obscureText: !_showPw,
+                              placeholder: 'Min. 6 characters',
+                              prefixIcon: const Icon(Icons.lock_rounded, size: 20),
+                              suffixIcon: IconButton(
+                                icon: Icon(_showPw ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                                    size: 20, color: Colors.white54),
+                                onPressed: () => setState(() => _showPw = !_showPw),
                               ),
                             ),
-                            child: _agree
-                                ? const Icon(DkgIcons.check, size: 14, color: Colors.black)
-                                : null,
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: RichText(
-                              text: const TextSpan(
-                                style: TextStyle(
-                                  fontFamily: 'PlusJakartaSans',
-                                  fontSize: 13,
-                                  color: Colors.white70,
-                                  height: 1.5,
-                                ),
+                            const SizedBox(height: 24),
+                            GestureDetector(
+                              onTap: () => setState(() => _agree = !_agree),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  TextSpan(text: 'Saya setuju dengan '),
-                                  TextSpan(
-                                    text: 'Syarat & Ketentuan',
-                                    style: TextStyle(color: AppColors.neonGreen, fontWeight: FontWeight.w700),
+                                  AnimatedContainer(
+                                    duration: const Duration(milliseconds: 150),
+                                    width: 22,
+                                    height: 22,
+                                    decoration: BoxDecoration(
+                                      color: _agree ? AppColors.bluePrimary : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(7),
+                                      border: Border.all(
+                                        color: _agree ? AppColors.bluePrimary : Colors.white54,
+                                        width: 1.6,
+                                      ),
+                                    ),
+                                    child: _agree
+                                        ? const Icon(Icons.check_rounded, size: 16, color: Colors.white)
+                                        : null,
                                   ),
-                                  TextSpan(text: ' dan '),
-                                  TextSpan(
-                                    text: 'Kebijakan Privasi',
-                                    style: TextStyle(color: AppColors.neonGreen, fontWeight: FontWeight.w700),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: RichText(
+                                      text: const TextSpan(
+                                        style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 13,
+                                          color: Colors.white70,
+                                          height: 1.5,
+                                        ),
+                                        children: [
+                                          TextSpan(text: 'I agree to the '),
+                                          TextSpan(
+                                            text: 'Terms & Conditions',
+                                            style: TextStyle(color: AppColors.bluePrimary, fontWeight: FontWeight.w700),
+                                          ),
+                                          TextSpan(text: ' and '),
+                                          TextSpan(
+                                            text: 'Privacy Policy',
+                                            style: TextStyle(color: AppColors.bluePrimary, fontWeight: FontWeight.w700),
+                                          ),
+                                          TextSpan(text: '.'),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  TextSpan(text: '.'),
                                 ],
                               ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 32),
+                            AppButton(
+                              label: 'Sign Up',
+                              variant: AppButtonVariant.primary,
+                              onPressed: _valid ? _register : null,
+                              isLoading: _loading,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 24),
-                    AppButton(
-                      label: 'Daftar',
-                      variant: AppButtonVariant.primary,
-                      onPressed: _valid ? _register : null,
-                      isLoading: _loading,
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Sudah punya akun? ',
-                            style: TextStyle(fontSize: 14, color: Colors.white70)),
-                        GestureDetector(
-                          onTap: () => context.go('/login'),
-                          child: const Text('Masuk',
-                              style: TextStyle(
-                                fontFamily: 'PlusJakartaSans',
-                                color: AppColors.neonGreen,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14,
-                              )),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Already have an account? ',
+                          style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white54)),
+                      GestureDetector(
+                        onTap: () => context.go('/login'),
+                        child: const Text('Sign In',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              color: AppColors.bluePrimary,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 13,
+                            )),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -33,19 +33,18 @@ class _TwoFANotifPageState extends State<TwoFANotifPage> {
           });
         } else if (state is OtpError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: AppColors.red),
+            SnackBar(content: Text(state.message), backgroundColor: AppColors.danger),
           );
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.bg,
         body: SafeArea(
           child: Column(
             children: [
               Align(
                 alignment: Alignment.topLeft,
                 child: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+                  icon: Icon(Icons.arrow_back_ios_new_rounded, color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.lightTextPrimary),
                   onPressed: () => context.go(widget.mode == 'setup' ? '/setup-2fa' : '/login'),
                 ),
               ),
@@ -59,18 +58,18 @@ class _TwoFANotifPageState extends State<TwoFANotifPage> {
                         icon: _phase == 'approved'
                             ? Icons.verified_user_outlined
                             : Icons.notifications_outlined,
-                        tone: 'green',
+                        tone: 'blue',
                         size: 82,
                         iconSize: 40,
                       ),
                       const SizedBox(height: 26),
                       Text(
                         _phase == 'approved' ? 'Disetujui!' : 'Cek notifikasi kamu',
-                        style: const TextStyle(
-                          fontFamily: 'PlusJakartaSans',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
                           fontSize: 23,
                           fontWeight: FontWeight.w800,
-                          color: Colors.white,
+                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.lightTextPrimary,
                           letterSpacing: -0.3,
                         ),
                         textAlign: TextAlign.center,
@@ -81,41 +80,41 @@ class _TwoFANotifPageState extends State<TwoFANotifPage> {
                             ? 'Identitas terverifikasi. Mengarahkan…'
                             : 'Kami mengirim notifikasi ke perangkatmu. Ketuk "Setujui" untuk melanjutkan.',
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontFamily: 'PlusJakartaSans',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
                           fontSize: 14.5,
-                          color: Colors.white70,
+                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white70 : AppColors.lightTextSecondary,
                           height: 1.55,
                         ),
                       ),
                       if (_phase == 'waiting') ...[
                         const SizedBox(height: 34),
-                        const Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(
+                            const SizedBox(
                               width: 18,
                               height: 18,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2.4,
-                                valueColor: AlwaysStoppedAnimation(AppColors.neonGreen),
+                                valueColor: AlwaysStoppedAnimation(AppColors.bluePrimary),
                               ),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             Text('Menunggu persetujuan…',
                                 style: TextStyle(
-                                  fontFamily: 'PlusJakartaSans',
+                                  fontFamily: 'Inter',
                                   fontSize: 13.5,
-                                  color: Colors.white54,
+                                  color: Theme.of(context).brightness == Brightness.dark ? Colors.white54 : AppColors.lightTextSecondary,
                                   fontWeight: FontWeight.w600,
                                 )),
                           ],
                         ),
                       ],
                       const Spacer(),
-                      const Text(
+                      Text(
                         'Tidak menerima notifikasi? Kirim ulang',
-                        style: TextStyle(fontSize: 12.5, color: Colors.white54),
+                        style: TextStyle(fontSize: 12.5, color: Theme.of(context).brightness == Brightness.dark ? Colors.white54 : AppColors.lightTextSecondary),
                       ),
                     ],
                   ),

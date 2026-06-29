@@ -189,6 +189,10 @@ class _PinPageState extends State<PinPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : AppColors.darkSurface;
+    final subtitleColor = isDark ? Colors.white54 : Colors.black54;
+
     return MultiBlocListener(
       listeners: [
         BlocListener<PaymentBloc, PaymentState>(
@@ -202,7 +206,7 @@ class _PinPageState extends State<PinPage> {
                   callbackUrl: cb,
                   reference: _callbackReference,
                   transactionId: result.transactionId,
-                ).then((_) => SystemNavigator.pop()); // Keluar dari Danantara
+                ).then((_) => SystemNavigator.pop()); // Keluar dari Bankling
                 return;
               }
               context.go('/success', extra: {
@@ -249,7 +253,7 @@ class _PinPageState extends State<PinPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Saldo tidak cukup. Saldo kamu saat ini ${CurrencyFormatter.format(state.balance)}.'),
-                  backgroundColor: AppColors.red,
+                  backgroundColor: AppColors.danger,
                 ),
               );
             } else if (state is PaymentError) {
@@ -265,7 +269,7 @@ class _PinPageState extends State<PinPage> {
                 return;
               }
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message), backgroundColor: AppColors.red),
+                SnackBar(content: Text(state.message), backgroundColor: AppColors.danger),
               );
             }
           },
@@ -274,21 +278,21 @@ class _PinPageState extends State<PinPage> {
           listener: (context, state) {
             if (state is OtpError) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message), backgroundColor: AppColors.red),
+                SnackBar(content: Text(state.message), backgroundColor: AppColors.danger),
               );
             }
           },
         ),
       ],
       child: Scaffold(
-        backgroundColor: AppColors.bg,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
           child: Column(
             children: [
               Align(
                 alignment: Alignment.topLeft,
                 child: IconButton(
-                  icon: const Icon(Icons.close_rounded, color: Colors.white),
+                  icon: Icon(Icons.close_rounded, color: textColor),
                   onPressed: () {
                     if (_step == _Step.otp && !_busy) {
                       _countdown?.cancel();
@@ -313,26 +317,26 @@ class _PinPageState extends State<PinPage> {
                 ),
               ),
               if (_busy) ...[
-                const Expanded(
+                Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CircularProgressIndicator(color: AppColors.neonGreen),
-                      SizedBox(height: 18),
+                      const CircularProgressIndicator(color: AppColors.bluePrimary),
+                      const SizedBox(height: 18),
                       Text('Memproses transaksi…',
                           style: TextStyle(
-                            fontFamily: 'PlusJakartaSans',
+                            fontFamily: 'Inter',
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
-                            color: Colors.white54,
+                            color: subtitleColor,
                           )),
                     ],
                   ),
                 ),
               ] else if (_step == _Step.pin) ...[
-                Expanded(child: _buildPinStep()),
+                Expanded(child: _buildPinStep(isDark, textColor, subtitleColor)),
               ] else ...[
-                Expanded(child: _buildOtpStep()),
+                Expanded(child: _buildOtpStep(isDark, textColor, subtitleColor)),
               ],
             ],
           ),
@@ -341,7 +345,7 @@ class _PinPageState extends State<PinPage> {
     );
   }
 
-  Widget _buildPinStep() {
+  Widget _buildPinStep(bool isDark, Color textColor, Color subtitleColor) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 10, 24, 24),
       child: Column(
@@ -350,23 +354,23 @@ class _PinPageState extends State<PinPage> {
             width: 54,
             height: 54,
             decoration: BoxDecoration(
-              color: Colors.white12,
+              color: isDark ? Colors.white12 : AppColors.bluePrimary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Center(child: Icon(Icons.lock_outline_rounded, size: 26, color: AppColors.neonGreen)),
+            child: const Center(child: Icon(Icons.lock_outline_rounded, size: 26, color: AppColors.bluePrimary)),
           ),
           const SizedBox(height: 16),
-          const Text('Masukkan PIN',
+          Text('Masukkan PIN',
               style: TextStyle(
-                fontFamily: 'PlusJakartaSans',
+                fontFamily: 'Inter',
                 fontSize: 21,
                 fontWeight: FontWeight.w800,
-                color: Colors.white,
+                color: textColor,
               )),
           const SizedBox(height: 6),
-          const Text('Masukkan 6 digit PIN keamanan kamu',
+          Text('Masukkan 6 digit PIN keamanan kamu',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13.5, color: Colors.white54)),
+              style: TextStyle(fontSize: 13.5, color: subtitleColor)),
           const Spacer(),
           PinPad(
             value: _pin,
@@ -375,13 +379,13 @@ class _PinPageState extends State<PinPage> {
             onBiometric: _bioEnabled ? _promptBiometric : null,
           ),
           const SizedBox(height: 18),
-          const Text.rich(TextSpan(
+          Text.rich(TextSpan(
             text: 'Lupa PIN? ',
-            style: TextStyle(fontFamily: 'PlusJakartaSans', fontSize: 12.5, color: Colors.white54),
-            children: [
+            style: TextStyle(fontFamily: 'Inter', fontSize: 12.5, color: subtitleColor),
+            children: const [
               TextSpan(
                 text: 'Reset',
-                style: TextStyle(color: AppColors.neonGreen, fontWeight: FontWeight.w700),
+                style: TextStyle(color: AppColors.bluePrimary, fontWeight: FontWeight.w700),
               ),
             ],
           )),
@@ -390,7 +394,7 @@ class _PinPageState extends State<PinPage> {
     );
   }
 
-  Widget _buildOtpStep() {
+  Widget _buildOtpStep(bool isDark, Color textColor, Color subtitleColor) {
     final header = _otpHeader;
 
     return SingleChildScrollView(
@@ -400,17 +404,17 @@ class _PinPageState extends State<PinPage> {
           FeatureIcon(icon: header.icon, tone: header.tone, size: 74, iconSize: 36),
           const SizedBox(height: 18),
           Text(header.title,
-              style: const TextStyle(
-                fontFamily: 'PlusJakartaSans',
+              style: TextStyle(
+                fontFamily: 'Inter',
                 fontSize: 23,
                 fontWeight: FontWeight.w800,
-                color: Colors.white,
+                color: textColor,
                 letterSpacing: -0.3,
               )),
           const SizedBox(height: 8),
           Text(header.subtitle,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 14.5, color: Colors.white54, height: 1.55)),
+              style: TextStyle(fontSize: 14.5, color: subtitleColor, height: 1.55)),
           const SizedBox(height: 28),
           AnimatedContainer(
             duration: const Duration(milliseconds: 80),
@@ -421,8 +425,8 @@ class _PinPageState extends State<PinPage> {
             const SizedBox(height: 12),
             const Text('Kode OTP salah, silakan coba lagi',
                 style: TextStyle(
-                  fontFamily: 'PlusJakartaSans',
-                  color: AppColors.red,
+                  fontFamily: 'Inter',
+                  color: AppColors.danger,
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                 )),
@@ -431,20 +435,20 @@ class _PinPageState extends State<PinPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white12,
+              color: isDark ? Colors.white12 : AppColors.bluePrimary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
-                const Icon(DkgIcons.shieldCheck, size: 18, color: AppColors.neonGreen),
+                const Icon(DkgIcons.shieldCheck, size: 18, color: AppColors.bluePrimary),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     'Total pembayaran ${CurrencyFormatter.format((widget.flowData['amount'] as num).toDouble())}',
-                    style: const TextStyle(
-                      fontFamily: 'PlusJakartaSans',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
                       fontSize: 12.5,
-                      color: Colors.white,
+                      color: textColor,
                       fontWeight: FontWeight.w600,
                       height: 1.4,
                     ),
@@ -458,15 +462,15 @@ class _PinPageState extends State<PinPage> {
             _resendTimer > 0
                 ? Text(
                     'Kirim ulang dalam 00:${_resendTimer.toString().padLeft(2, '0')}',
-                    style: const TextStyle(fontSize: 13.5, color: Colors.white54),
+                    style: TextStyle(fontSize: 13.5, color: subtitleColor),
                   )
                 : TextButton.icon(
                     onPressed: _resendOtp,
-                    icon: const Icon(DkgIcons.refresh, size: 16, color: AppColors.neonGreen),
+                    icon: const Icon(DkgIcons.refresh, size: 16, color: AppColors.bluePrimary),
                     label: const Text('Kirim ulang kode',
                         style: TextStyle(
-                          fontFamily: 'PlusJakartaSans',
-                          color: AppColors.neonGreen,
+                          fontFamily: 'Inter',
+                          color: AppColors.bluePrimary,
                           fontWeight: FontWeight.w700,
                           fontSize: 14,
                         )),

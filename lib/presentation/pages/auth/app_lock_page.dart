@@ -37,7 +37,7 @@ class _AppLockPageState extends State<AppLockPage> {
 
   Future<void> _promptBiometric() async {
     final service = sl<BiometricService>();
-    final success = await service.authenticate(reason: 'Gunakan biometrik untuk membuka Danantara');
+    final success = await service.authenticate(reason: 'Gunakan biometrik untuk membuka Bankling');
     if (success && mounted) {
       _unlockApp();
     }
@@ -70,8 +70,12 @@ class _AppLockPageState extends State<AppLockPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : AppColors.darkSurface;
+    final subtitleColor = isDark ? Colors.white54 : Colors.black54;
+
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 40, 24, 24),
@@ -81,28 +85,29 @@ class _AppLockPageState extends State<AppLockPage> {
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  color: Colors.white12,
+                  color: isDark ? Colors.white12 : AppColors.bluePrimary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: const Center(
-                  child: Icon(Icons.lock_outline_rounded, size: 32, color: AppColors.neonGreen),
+                  child: Icon(Icons.lock_outline_rounded, size: 32, color: AppColors.bluePrimary),
                 ),
               ),
               const SizedBox(height: 24),
-              const Text('Danantara Terkunci',
+              Text('Bankling Terkunci',
                   style: TextStyle(
-                    fontFamily: 'PlusJakartaSans',
+                    fontFamily: 'Inter',
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
-                    color: Colors.white,
+                    color: textColor,
                   )),
               const SizedBox(height: 8),
               Text(
                 _error ? 'PIN salah, silakan coba lagi' : 'Masukkan PIN Aplikasi Anda',
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  fontFamily: 'Inter',
                   fontSize: 14,
-                  color: _error ? AppColors.red : Colors.white54,
+                  color: _error ? AppColors.danger : subtitleColor,
                 ),
               ),
               const Spacer(),
@@ -115,8 +120,8 @@ class _AppLockPageState extends State<AppLockPage> {
               if (_bioEnabled)
                 TextButton.icon(
                   onPressed: _promptBiometric,
-                  icon: const Icon(Icons.fingerprint, color: AppColors.neonGreen),
-                  label: const Text('Gunakan Biometrik', style: TextStyle(color: AppColors.neonGreen)),
+                  icon: const Icon(Icons.fingerprint, color: AppColors.bluePrimary),
+                  label: const Text('Gunakan Biometrik', style: TextStyle(fontFamily: 'Inter', color: AppColors.bluePrimary)),
                 ),
             ],
           ),

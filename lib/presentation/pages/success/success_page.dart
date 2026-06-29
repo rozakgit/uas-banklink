@@ -33,8 +33,13 @@ class _SuccessPageState extends State<SuccessPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : AppColors.darkSurface;
+    final subtitleColor = isDark ? Colors.white54 : Colors.black54;
+    final containerBg = isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white;
+
     return Scaffold(
-      backgroundColor: AppColors.bg,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -48,31 +53,31 @@ class _SuccessPageState extends State<SuccessPage> {
                       width: 100,
                       height: 100,
                       decoration: BoxDecoration(
-                        color: Colors.white12,
+                        color: isDark ? Colors.white12 : AppColors.bluePrimary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
-                        boxShadow: [BoxShadow(color: AppColors.neonGreen.withOpacity(0.3), blurRadius: 20)],
+                        boxShadow: [BoxShadow(color: AppColors.bluePrimary.withValues(alpha: 0.3), blurRadius: 20)],
                       ),
                       child: const Center(
-                        child: Icon(Icons.check_circle, size: 80, color: AppColors.neonGreen),
+                        child: Icon(Icons.check_circle, size: 80, color: AppColors.bluePrimary),
                       ),
                     ),
                     const SizedBox(height: 32),
                     Text(widget.title,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontFamily: 'Poppins',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: textColor,
                         )),
                     if (widget.subtitle.isNotEmpty) ...[
                       const SizedBox(height: 8),
                       Text(widget.subtitle,
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 16,
-                            color: Colors.white54,
+                            color: subtitleColor,
                           )),
                     ],
                     const SizedBox(height: 32),
@@ -80,10 +85,10 @@ class _SuccessPageState extends State<SuccessPage> {
                       fit: BoxFit.scaleDown,
                       child: Text(CurrencyFormatter.format(widget.amount),
                           style: const TextStyle(
-                            fontFamily: 'Poppins',
+                            fontFamily: 'Inter',
                             fontSize: 36,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.neonGreen,
+                            color: AppColors.bluePrimary,
                           )),
                     ),
                     if (widget.lines.isNotEmpty) ...[
@@ -92,10 +97,14 @@ class _SuccessPageState extends State<SuccessPage> {
                         width: double.infinity,
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: containerBg,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
-                            BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 10, offset: const Offset(0, 4)),
+                            BoxShadow(
+                              color: isDark ? Colors.black.withValues(alpha: 0.2) : Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
                           ],
                         ),
                         child: Column(
@@ -115,10 +124,10 @@ class _SuccessPageState extends State<SuccessPage> {
                                           mainAxisSize: MainAxisSize.max,
                                           children: List.generate(
                                             (constraints.constrainWidth() / 10).floor(),
-                                            (index) => const SizedBox(
+                                            (index) => SizedBox(
                                               width: 5,
                                               height: 1,
-                                              child: DecoratedBox(decoration: BoxDecoration(color: Colors.black26)),
+                                              child: DecoratedBox(decoration: BoxDecoration(color: isDark ? Colors.white24 : Colors.black26)),
                                             ),
                                           ),
                                         );
@@ -133,21 +142,21 @@ class _SuccessPageState extends State<SuccessPage> {
                                       children: [
                                         Expanded(
                                           child: Text(l[0],
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontFamily: 'Inter',
                                                 fontSize: 14,
-                                                color: Colors.black54,
+                                                color: subtitleColor,
                                               )),
                                         ),
                                         const SizedBox(width: 16),
                                         Expanded(
                                           child: Text(l[1],
                                               textAlign: TextAlign.right,
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontFamily: 'Inter',
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.black87,
+                                                color: textColor,
                                               )),
                                         ),
                                       ],
@@ -173,12 +182,12 @@ class _SuccessPageState extends State<SuccessPage> {
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 18),
                       decoration: BoxDecoration(
-                        color: AppColors.neonGreen,
+                        color: AppColors.bluePrimary,
                         borderRadius: BorderRadius.circular(16),
-                        boxShadow: [BoxShadow(color: AppColors.neonGreen.withOpacity(0.3), blurRadius: 8)],
+                        boxShadow: [BoxShadow(color: AppColors.bluePrimary.withValues(alpha: 0.3), blurRadius: 8)],
                       ),
                       child: const Center(
-                        child: Text('Selesai', style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)),
+                        child: Text('Selesai', style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                       ),
                     ),
                   ),
@@ -193,10 +202,10 @@ class _SuccessPageState extends State<SuccessPage> {
                       decoration: BoxDecoration(
                         color: Colors.transparent,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: AppColors.neonGreen),
+                        border: Border.all(color: AppColors.bluePrimary),
                       ),
                       child: const Center(
-                        child: Text('Unduh Invoice / Struk', style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.neonGreen)),
+                        child: Text('Unduh Invoice / Struk', style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.bluePrimary)),
                       ),
                     ),
                   ),

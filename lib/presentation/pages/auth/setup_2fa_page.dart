@@ -63,15 +63,16 @@ class _Setup2FAPageState extends State<Setup2FAPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Column(
           children: [
             Align(
               alignment: Alignment.topLeft,
               child: IconButton(
-                icon: const Icon(DkgIcons.arrowLeft, color: Colors.white),
+                icon: Icon(DkgIcons.arrowLeft, color: isDark ? Colors.white : AppColors.lightTextPrimary),
                 onPressed: () => context.canPop() ? context.pop() : context.go('/akun'),
               ),
             ),
@@ -84,29 +85,29 @@ class _Setup2FAPageState extends State<Setup2FAPage> {
                     width: 60,
                     height: 60,
                     decoration: BoxDecoration(
-                      color: AppColors.neonGreen.withOpacity(0.1),
+                      color: AppColors.bluePrimary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(18),
                     ),
                     child: const Center(
-                      child: Icon(DkgIcons.shieldCheck, size: 30, color: AppColors.neonGreen),
+                      child: Icon(DkgIcons.shieldCheck, size: 30, color: AppColors.bluePrimary),
                     ),
                   ),
                   const SizedBox(height: 18),
-                  const Text('Amankan akunmu',
+                  Text('Amankan akunmu',
                       style: TextStyle(
-                        fontFamily: 'PlusJakartaSans',
+                        fontFamily: 'Inter',
                         fontSize: 25,
                         fontWeight: FontWeight.w800,
-                        color: Colors.white,
+                        color: isDark ? Colors.white : AppColors.lightTextPrimary,
                         letterSpacing: -0.4,
                       )),
                   const SizedBox(height: 7),
-                  const Text(
+                  Text(
                     'Pilih metode verifikasi 2 langkah (2FA). Kamu bisa ganti kapan saja di Pengaturan.',
                     style: TextStyle(
-                      fontFamily: 'PlusJakartaSans',
+                      fontFamily: 'Inter',
                       fontSize: 14.5,
-                      color: Colors.white70,
+                      color: isDark ? Colors.white70 : AppColors.lightTextSecondary,
                       height: 1.5,
                     ),
                   ),
@@ -125,14 +126,14 @@ class _Setup2FAPageState extends State<Setup2FAPage> {
                       margin: const EdgeInsets.only(bottom: 13),
                       padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
-                        color: on ? AppColors.neonGreen.withOpacity(0.1) : Colors.black.withOpacity(0.3),
+                        color: on ? AppColors.bluePrimary.withOpacity(0.1) : (isDark ? Colors.black.withOpacity(0.3) : Colors.white),
                         borderRadius: BorderRadius.circular(18),
                         border: Border.all(
-                          color: on ? AppColors.neonGreen : Colors.white24,
+                          color: on ? AppColors.bluePrimary : (isDark ? Colors.white24 : AppColors.lightLine),
                           width: 1.8,
                         ),
                         boxShadow: on
-                            ? [BoxShadow(color: AppColors.neonGreen.withOpacity(0.1), blurRadius: 0, spreadRadius: 4)]
+                            ? [BoxShadow(color: AppColors.bluePrimary.withOpacity(0.1), blurRadius: 0, spreadRadius: 4)]
                             : [],
                       ),
                       child: Row(
@@ -148,25 +149,25 @@ class _Setup2FAPageState extends State<Setup2FAPage> {
                                     Flexible(
                                       child: Text(m.title,
                                           overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            fontFamily: 'PlusJakartaSans',
+                                          style: TextStyle(
+                                            fontFamily: 'Inter',
                                             fontSize: 15.5,
                                             fontWeight: FontWeight.w700,
-                                            color: Colors.white,
+                                            color: isDark ? Colors.white : AppColors.lightTextPrimary,
                                           )),
                                     ),
                                     if (m.badge != null) ...[
                                       const SizedBox(width: 7),
-                                      AppBadge(label: m.badge!, tone: 'green'),
+                                      AppBadge(label: m.badge!, tone: 'blue'),
                                     ],
                                   ],
                                 ),
                                 const SizedBox(height: 3),
                                 Text(m.desc,
-                                    style: const TextStyle(
-                                      fontFamily: 'PlusJakartaSans',
+                                    style: TextStyle(
+                                      fontFamily: 'Inter',
                                       fontSize: 12.8,
-                                      color: Colors.white54,
+                                      color: isDark ? Colors.white54 : AppColors.lightTextSecondary,
                                       height: 1.45,
                                     )),
                               ],
@@ -179,9 +180,9 @@ class _Setup2FAPageState extends State<Setup2FAPage> {
                             height: 22,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: on ? AppColors.neonGreen : Colors.transparent,
+                              color: on ? AppColors.bluePrimary : Colors.transparent,
                               border: Border.all(
-                                color: on ? AppColors.neonGreen : Colors.white54,
+                                color: on ? AppColors.bluePrimary : (isDark ? Colors.white54 : AppColors.lightTextSecondary),
                                 width: 2,
                               ),
                             ),
@@ -192,7 +193,7 @@ class _Setup2FAPageState extends State<Setup2FAPage> {
                                       height: 9,
                                       decoration: const BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: Colors.black,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   )

@@ -13,12 +13,12 @@ class ReceiptPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final isCredit = transaction.isCredit;
-    final iconColor = isCredit ? AppColors.neonGreen : AppColors.red;
+    final iconColor = isCredit ? AppColors.success : AppColors.danger;
     final iconData = isCredit ? Icons.arrow_downward : Icons.arrow_upward;
 
     return Scaffold(
-      backgroundColor: AppColors.bg,
       appBar: AppTopBar(title: 'Detail Transaksi', onBack: () => context.pop()),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
@@ -29,9 +29,9 @@ class ReceiptPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
+                color: isDark ? Colors.black.withOpacity(0.3) : Colors.white,
                 borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: Colors.white24),
+                border: Border.all(color: isDark ? Colors.white24 : AppColors.lightLine),
               ),
               child: Column(
                 children: [
@@ -47,18 +47,18 @@ class ReceiptPage extends StatelessWidget {
                   const SizedBox(height: 16),
                   Text(
                     transaction.isCredit ? 'Uang Masuk' : 'Uang Keluar',
-                    style: const TextStyle(
-                      fontFamily: 'PlusJakartaSans',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white54,
+                      color: isDark ? Colors.white54 : AppColors.lightTextSecondary,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     '${isCredit ? '+' : '-'}${CurrencyFormatter.format(transaction.amount)}',
                     style: TextStyle(
-                      fontFamily: 'PlusJakartaSans',
+                      fontFamily: 'Inter',
                       fontSize: 32,
                       fontWeight: FontWeight.w800,
                       color: iconColor,
@@ -68,16 +68,16 @@ class ReceiptPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: AppColors.neonGreen.withOpacity(0.1),
+                      color: AppColors.success.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Text(
                       'Berhasil',
                       style: TextStyle(
-                        fontFamily: 'PlusJakartaSans',
+                        fontFamily: 'Inter',
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.neonGreen,
+                        color: AppColors.success,
                       ),
                     ),
                   ),
@@ -90,21 +90,21 @@ class ReceiptPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.3),
+                color: isDark ? Colors.black.withOpacity(0.3) : Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white24),
+                border: Border.all(color: isDark ? Colors.white24 : AppColors.lightLine),
               ),
               child: Column(
                 children: [
-                  _buildDetailRow('Nomor Referensi', 'DKG${transaction.id}'),
-                  const Divider(color: Colors.white12, height: 24),
-                  _buildDetailRow('Waktu Transaksi', _formatDateTime(transaction.createdAt)),
-                  const Divider(color: Colors.white12, height: 24),
-                  _buildDetailRow('Keterangan', transaction.description),
-                  const Divider(color: Colors.white12, height: 24),
-                  _buildDetailRow('Saldo Sebelumnya', CurrencyFormatter.format(transaction.balanceBefore)),
-                  const Divider(color: Colors.white12, height: 24),
-                  _buildDetailRow('Sisa Saldo', CurrencyFormatter.format(transaction.balanceAfter)),
+                  _buildDetailRow('Nomor Referensi', 'DKG${transaction.id}', isDark),
+                  Divider(color: isDark ? Colors.white12 : AppColors.lightLine, height: 24),
+                  _buildDetailRow('Waktu Transaksi', _formatDateTime(transaction.createdAt), isDark),
+                  Divider(color: isDark ? Colors.white12 : AppColors.lightLine, height: 24),
+                  _buildDetailRow('Keterangan', transaction.description, isDark),
+                  Divider(color: isDark ? Colors.white12 : AppColors.lightLine, height: 24),
+                  _buildDetailRow('Saldo Sebelumnya', CurrencyFormatter.format(transaction.balanceBefore), isDark),
+                  Divider(color: isDark ? Colors.white12 : AppColors.lightLine, height: 24),
+                  _buildDetailRow('Sisa Saldo', CurrencyFormatter.format(transaction.balanceAfter), isDark),
                 ],
               ),
             ),
@@ -119,7 +119,7 @@ class ReceiptPage extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
+  Widget _buildDetailRow(String label, String value, bool isDark) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,11 +128,11 @@ class ReceiptPage extends StatelessWidget {
           flex: 2,
           child: Text(
             label,
-            style: const TextStyle(
-              fontFamily: 'PlusJakartaSans',
+            style: TextStyle(
+              fontFamily: 'Inter',
               fontSize: 13.5,
               fontWeight: FontWeight.w500,
-              color: Colors.white54,
+              color: isDark ? Colors.white54 : AppColors.lightTextSecondary,
             ),
           ),
         ),
@@ -141,11 +141,11 @@ class ReceiptPage extends StatelessWidget {
           child: Text(
             value,
             textAlign: TextAlign.right,
-            style: const TextStyle(
-              fontFamily: 'PlusJakartaSans',
+            style: TextStyle(
+              fontFamily: 'Inter',
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: Colors.white,
+              color: isDark ? Colors.white : AppColors.lightTextPrimary,
             ),
           ),
         ),

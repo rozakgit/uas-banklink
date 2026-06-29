@@ -106,26 +106,27 @@ class AppRouter {
                           : 'home';
 
               return _withAccount(Scaffold(
-                extendBody: true, // Allow body to scroll under the transparent nav parts
-                resizeToAvoidBottomInset: false, // Prevent bottom nav from moving up when typing
-                backgroundColor: AppColors.bg, // Base dark background
+                extendBody: true,
+                resizeToAvoidBottomInset: false,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 body: child,
-                floatingActionButton: SizedBox(
-                  width: 56,
-                  height: 56,
+                floatingActionButton: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.bluePrimary.withOpacity(0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
                   child: FloatingActionButton(
                     onPressed: () => context.go('/payment'),
-                    backgroundColor: const Color(0xFFDFF26E), // Neon background for scan button
-                    elevation: 8,
+                    backgroundColor: AppColors.bluePrimary,
+                    elevation: 0,
                     shape: const CircleBorder(),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.transparent, 
-                      ),
-                      child: const Icon(Icons.qr_code_scanner_rounded, color: Colors.black, size: 24),
-                    ),
+                    child: const Icon(Icons.qr_code_scanner_rounded, color: Colors.white, size: 24),
                   ),
                 ),
                 floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

@@ -1,90 +1,100 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Primary Lime/Neon
-  static const Color primary = Color(0xFFBDF510);
-  static const Color primaryLight = Color(0xFFD3F000);
-  static const Color primaryDark = Color(0xFFA5D700);
-  static const Color primarySurface = Color(0xFF152315);
-  static const Color primaryBorder = Color(0xFF444935);
+  // Finance App Blue Brand Colors
+  static const Color bluePrimary = Color(0xFF5A58FF);
+  static const Color blueGradientStart = Color(0xFF6C63FF);
+  static const Color blueGradientEnd = Color(0xFF4A40FF);
+  static const Color blueLight = Color(0xFFE2E4FF);
   
-  // Custom Dribbble Colors
-  static const Color neonGreen = Color(0xFFDFF26E);
-  static const Color darkGreen = Color(0xFFAACF31);
+  // Light Theme Colors
+  static const Color lightBg = Color(0xFFF8F9FE);
+  static const Color lightSurface = Colors.white;
+  static const Color lightTextPrimary = Color(0xFF1E1E2D);
+  static const Color lightTextSecondary = Color(0xFF8A8A9E);
+  static const Color lightLine = Color(0xFFEAEAF4);
+  static const Color lightCardActionBg = Color(0xFFEDEEF8); // For quick actions like Topup, Bills
+
+  // Dark Theme Colors
+  static const Color darkBg = Color(0xFF0F0F1A);
+  static const Color darkSurface = Color(0xFF1A1A2E);
+  static const Color darkTextPrimary = Colors.white;
+  static const Color darkTextSecondary = Color(0xFFA0A0B2);
+  static const Color darkLine = Color(0xFF2A2A3E);
+  static const Color darkCardActionBg = Color(0xFF24243D);
 
   // Semantic
-  static const Color green = Color(0xFFBDF510); // Using neon lime as green
-  static const Color greenSurface = Color(0xFF11210D);
-  static const Color amber = Color(0xFFFACC15);
-  static const Color amberSurface = Color(0xFF2A2307);
-  static const Color red = Color(0xFFFFB4AB);
-  static const Color redSurface = Color(0xFF3B0909);
-  static const Color violet = Color(0xFFD0BCFF);
-  static const Color violetSurface = Color(0xFF211047);
+  static const Color success = Color(0xFF34C759);
+  static const Color danger = Color(0xFFFF3B30);
+  static const Color warning = Color(0xFFFF9500);
 
-  // Neutral (Dark Theme)
-  static const Color ink = Color(0xFFD6E7D2); // on-surface
-  static const Color slate600 = Color(0xFFC5C9AF); // on-surface-variant
-  static const Color slate500 = Color(0xFF8E937B); // outline
-  static const Color slate400 = Color(0xFF444935); // outline-variant
-  static const Color slate300 = Color(0xFF2A3829); // surface-variant
-  static const Color line = Color(0xFF1F2D1F); // surface-container-high
-  static const Color line2 = Color(0xFF152315); // surface-container
-  static const Color bg = Color(0xFF09160A); // background
-  static const Color white = Color(0xFF111F11); // surface-container-low
-
-  // Gradient
-  static const LinearGradient primaryGradient = LinearGradient(
+  // Gradients
+  static const LinearGradient blueGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    stops: [0.0, 0.55, 1.0],
-    colors: [primaryLight, primary, primaryDark],
+    colors: [blueGradientStart, blueGradientEnd],
   );
 
   // Shadows
-  static List<BoxShadow> shadowCard = [
+  static List<BoxShadow> shadowCardLight = [
     BoxShadow(
-      color: Color(0x33000000),
-      blurRadius: 24,
+      color: Color(0x0F000000),
+      blurRadius: 20,
       spreadRadius: 0,
-      offset: Offset(0, 8),
+      offset: Offset(0, 10),
     ),
   ];
   
-  static List<BoxShadow> shadowSoft = [
+  static List<BoxShadow> shadowCardDark = [
     BoxShadow(
-      color: Color(0x1A000000),
-      blurRadius: 12,
-      spreadRadius: 0,
-      offset: Offset(0, 4),
-    ),
-  ];
-  
-  static List<BoxShadow> shadowPrimary = [
-    BoxShadow(
-      color: Color(0x4DBDF510), // Lime glow
-      blurRadius: 30,
+      color: Color(0x20000000),
+      blurRadius: 20,
       spreadRadius: 0,
       offset: Offset(0, 10),
     ),
   ];
 
-  static List<BoxShadow> glowLime = [
+  static List<BoxShadow> shadowPrimary = [
     BoxShadow(
-      color: Color(0x66BDF510),
+      color: bluePrimary.withOpacity(0.4),
       blurRadius: 15,
       spreadRadius: 0,
-      offset: Offset(0, 0),
+      offset: Offset(0, 5),
     ),
   ];
 
-  // Tone map for FeatureIcon
+  // Old semantic compatibility (if needed by other pages)
+  static const Color primary = bluePrimary;
+  static const Color primaryLight = blueLight;
+  static const Color primaryDark = blueGradientStart;
+  static const Color primarySurface = Color(0xFF152315);
+  static const Color neonGreen = Color(0xFFDFF26E);
+  static const Color darkGreen = Color(0xFFAACF31);
+  static const Color red = danger;
+  static const Color green = success;
+  static const Color amber = warning;
+  static const Color violet = Color(0xFFD0BCFF);
+  
+  static const Color bg = lightBg; // Default
+  static const Color ink = lightTextPrimary;
+  static const Color line = lightLine;
+  static const Color line2 = lightLine;
+  static const Color slate600 = Color(0xFFC5C9AF);
+  static const Color slate500 = lightTextSecondary;
+  static const Color slate400 = Color(0xFF444935);
+  static const Color slate300 = Color(0xFF2A3829);
+  static const Color white = Colors.white;
+
+  static List<BoxShadow> shadowCard = shadowCardLight;
+  static List<BoxShadow> shadowSoft = shadowCardLight;
+
+  // Tone map for FeatureIcon (Legacy)
   static Map<String, List<Color>> tones = {
-    'blue': [primarySurface, primary], // Replacing blue with primary lime
-    'green': [greenSurface, green],
-    'amber': [amberSurface, amber],
-    'red': [redSurface, red],
-    'violet': [violetSurface, violet],
+    'blue': [primarySurface, primary],
+    'green': [Color(0xFF11210D), green],
+    'amber': [Color(0xFF2A2307), amber],
+    'red': [Color(0xFF3B0909), red],
+    'violet': [Color(0xFF211047), violet],
     'slate': [line2, slate500],
   };
 

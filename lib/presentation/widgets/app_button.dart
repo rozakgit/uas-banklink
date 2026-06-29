@@ -32,7 +32,7 @@ class AppButton extends StatelessWidget {
       AppButtonSize.sm => (38.0, 13.5, 11.0, 13.0),
     };
 
-    final (bg, fg, shadow, border) = _resolveStyle();
+    final (bg, fg, shadow, border, gradient) = _resolveStyle();
     final disabled = onPressed == null;
 
     return Opacity(
@@ -40,13 +40,13 @@ class AppButton extends StatelessWidget {
       child: GestureDetector(
         onTap: disabled || isLoading ? null : onPressed,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 120),
+          duration: const Duration(milliseconds: 150),
           height: height,
           width: fullWidth ? double.infinity : null,
           padding: EdgeInsets.symmetric(horizontal: px),
           decoration: BoxDecoration(
-            gradient: null, // Removed primary gradient in favor of solid colors
-            color: bg,
+            gradient: gradient,
+            color: gradient == null ? bg : null,
             borderRadius: BorderRadius.circular(radius),
             boxShadow: shadow,
             border: border,
@@ -72,11 +72,11 @@ class AppButton extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  fontFamily: 'PlusJakartaSans',
+                  fontFamily: 'Inter',
                   fontSize: fontSize,
                   fontWeight: FontWeight.w700,
                   color: fg,
-                  letterSpacing: 0.1,
+                  letterSpacing: 0.2,
                 ),
               ),
             ],
@@ -86,37 +86,41 @@ class AppButton extends StatelessWidget {
     );
   }
 
-  (Color, Color, List<BoxShadow>, Border?) _resolveStyle() {
+  (Color, Color, List<BoxShadow>, Border?, Gradient?) _resolveStyle() {
     return switch (variant) {
       AppButtonVariant.primary => (
-          AppColors.neonGreen,
-          Colors.black,
-          [], // Removed lime glow for a flatter solid modern look
+          AppColors.bluePrimary,
+          Colors.white,
+          AppColors.shadowPrimary,
           null,
+          AppColors.blueGradient,
         ),
-      AppButtonVariant.dark => (AppColors.ink, Colors.white, [], null),
-      AppButtonVariant.soft => (AppColors.primarySurface, AppColors.primary, [], null),
-      AppButtonVariant.ghost => (Colors.transparent, AppColors.slate600, [], null),
+      AppButtonVariant.dark => (AppColors.ink, Colors.white, [], null, null),
+      AppButtonVariant.soft => (AppColors.bluePrimary.withOpacity(0.1), AppColors.bluePrimary, [], null, null),
+      AppButtonVariant.ghost => (Colors.transparent, AppColors.slate600, [], null, null),
       AppButtonVariant.outline => (
           Colors.white,
           AppColors.ink,
           [],
           Border.all(color: AppColors.line, width: 1.5),
+          null,
         ),
       AppButtonVariant.outlineWhite => (
           Colors.transparent,
           Colors.white,
           [],
-          Border.all(color: Colors.white.withValues(alpha: 0.7), width: 1.5),
+          Border.all(color: Colors.white.withOpacity(0.7), width: 1.5),
+          null,
         ),
       AppButtonVariant.white => (
           Colors.white,
-          AppColors.primary,
-          [BoxShadow(color: Colors.black.withValues(alpha: 0.14), blurRadius: 20, offset: const Offset(0, 8))],
+          AppColors.bluePrimary,
+          AppColors.shadowCardLight,
+          null,
           null,
         ),
-      AppButtonVariant.danger => (AppColors.red, Colors.white, [], null),
-      AppButtonVariant.success => (AppColors.green, Colors.white, [], null),
+      AppButtonVariant.danger => (AppColors.red, Colors.white, [], null, null),
+      AppButtonVariant.success => (AppColors.green, Colors.white, [], null, null),
     };
   }
 }

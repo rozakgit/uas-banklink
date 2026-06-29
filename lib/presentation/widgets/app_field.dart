@@ -66,6 +66,13 @@ class _AppFieldState extends State<AppField> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = AppColors.bluePrimary;
+    final bgColor = isDark ? Colors.black.withOpacity(0.3) : AppColors.lightSurface;
+    final borderColor = isDark ? Colors.white24 : AppColors.lightLine;
+    final textColor = isDark ? Colors.white : AppColors.lightTextPrimary;
+    final hintColor = isDark ? Colors.white38 : AppColors.lightTextSecondary;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -73,11 +80,11 @@ class _AppFieldState extends State<AppField> {
         if (widget.label != null) ...[
           Text(
             widget.label!,
-            style: const TextStyle(
-              fontFamily: 'PlusJakartaSans',
+            style: TextStyle(
+              fontFamily: 'Inter',
               fontSize: 13.5,
               fontWeight: FontWeight.w600,
-              color: Colors.white70,
+              color: isDark ? Colors.white70 : AppColors.lightTextSecondary,
             ),
           ),
           const SizedBox(height: 8),
@@ -86,16 +93,16 @@ class _AppFieldState extends State<AppField> {
           duration: const Duration(milliseconds: 150),
           height: 54,
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.3),
+            color: bgColor,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: _focused ? AppColors.neonGreen : Colors.white24,
-              width: 1.0,
+              color: _focused ? primaryColor : borderColor,
+              width: _focused ? 1.5 : 1.0,
             ),
             boxShadow: _focused
                 ? [
                     BoxShadow(
-                        color: AppColors.neonGreen.withOpacity(0.1), blurRadius: 0, spreadRadius: 4)
+                        color: primaryColor.withOpacity(0.15), blurRadius: 8, spreadRadius: 2)
                   ]
                 : [],
           ),
@@ -105,7 +112,7 @@ class _AppFieldState extends State<AppField> {
                 const SizedBox(width: 14),
                 ColorFiltered(
                   colorFilter: ColorFilter.mode(
-                    _focused ? AppColors.neonGreen : Colors.white54,
+                    _focused ? primaryColor : hintColor,
                     BlendMode.srcIn,
                   ),
                   child: widget.prefixIcon!,
@@ -127,20 +134,20 @@ class _AppFieldState extends State<AppField> {
                     onEditingComplete: widget.onEditingComplete,
                     readOnly: widget.readOnly,
                     onTap: widget.onTap,
-                    style: const TextStyle(
-                      fontFamily: 'PlusJakartaSans',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
                       fontSize: 15.5,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white,
+                      color: textColor,
                     ),
                     decoration: InputDecoration(
                       filled: false,
                       hintText: widget.placeholder,
-                      hintStyle: const TextStyle(
-                        fontFamily: 'PlusJakartaSans',
+                      hintStyle: TextStyle(
+                        fontFamily: 'Inter',
                         fontSize: 15.5,
                         fontWeight: FontWeight.w400,
-                        color: Colors.white38,
+                        color: hintColor,
                       ),
                       border: InputBorder.none,
                       enabledBorder: InputBorder.none,

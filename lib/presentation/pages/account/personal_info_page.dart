@@ -7,7 +7,7 @@ import '../../blocs/auth/auth_bloc.dart';
 class PersonalInfoPage extends StatelessWidget {
   const PersonalInfoPage({super.key});
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(String label, String value, bool isDark) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
@@ -17,9 +17,9 @@ class PersonalInfoPage extends StatelessWidget {
             flex: 2,
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Inter',
-                color: Colors.white54,
+                color: isDark ? Colors.white54 : AppColors.lightTextSecondary,
                 fontSize: 14,
               ),
             ),
@@ -28,9 +28,9 @@ class PersonalInfoPage extends StatelessWidget {
             flex: 3,
             child: Text(
               value.isEmpty ? '-' : value,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Inter',
-                color: Colors.white,
+                color: isDark ? Colors.white : AppColors.lightTextPrimary,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -44,16 +44,17 @@ class PersonalInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.bg,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : AppColors.lightTextPrimary),
           onPressed: () => context.canPop() ? context.pop() : context.go('/akun'),
         ),
-        title: const Text('Informasi Pribadi', style: TextStyle(fontFamily: 'Poppins', color: Colors.white, fontWeight: FontWeight.bold)),
+        title: Text('Informasi Pribadi', style: TextStyle(fontFamily: 'Inter', color: isDark ? Colors.white : AppColors.lightTextPrimary, fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: BlocBuilder<AuthBloc, AuthState>(
@@ -69,21 +70,21 @@ class PersonalInfoPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3),
+                      color: isDark ? Colors.black.withOpacity(0.3) : Colors.white,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white24),
+                      border: Border.all(color: isDark ? Colors.white24 : AppColors.lightLine),
                     ),
                     child: Column(
                       children: [
-                        _buildInfoRow('Nama Lengkap', user.name),
-                        const Divider(color: Colors.white12),
-                        _buildInfoRow('Email', user.email),
-                        const Divider(color: Colors.white12),
-                        _buildInfoRow('Alamat', user.address ?? ''),
-                        const Divider(color: Colors.white12),
-                        _buildInfoRow('Nomor Telepon', user.phone ?? ''),
-                        const Divider(color: Colors.white12),
-                        _buildInfoRow('Tanggal Lahir', user.dob ?? ''),
+                        _buildInfoRow('Nama Lengkap', user.name, isDark),
+                        Divider(color: isDark ? Colors.white12 : AppColors.lightLine),
+                        _buildInfoRow('Email', user.email, isDark),
+                        Divider(color: isDark ? Colors.white12 : AppColors.lightLine),
+                        _buildInfoRow('Alamat', user.address ?? '', isDark),
+                        Divider(color: isDark ? Colors.white12 : AppColors.lightLine),
+                        _buildInfoRow('Nomor Telepon', user.phone ?? '', isDark),
+                        Divider(color: isDark ? Colors.white12 : AppColors.lightLine),
+                        _buildInfoRow('Tanggal Lahir', user.dob ?? '', isDark),
                       ],
                     ),
                   ),
@@ -96,14 +97,14 @@ class PersonalInfoPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       decoration: BoxDecoration(
-                        color: AppColors.neonGreen,
+                        color: AppColors.bluePrimary,
                         borderRadius: BorderRadius.circular(16),
-                        boxShadow: [BoxShadow(color: AppColors.neonGreen.withOpacity(0.3), blurRadius: 8)],
+                        boxShadow: [BoxShadow(color: AppColors.bluePrimary.withOpacity(0.3), blurRadius: 8)],
                       ),
                       child: const Center(
                         child: Text(
                           'Edit Profil', 
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)
+                          style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)
                         ),
                       ),
                     ),
@@ -112,7 +113,7 @@ class PersonalInfoPage extends StatelessWidget {
               ),
             );
           }
-          return const Center(child: CircularProgressIndicator(color: AppColors.neonGreen));
+          return const Center(child: CircularProgressIndicator(color: AppColors.bluePrimary));
         },
       ),
     );

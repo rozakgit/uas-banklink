@@ -10,10 +10,11 @@ class ServerException implements Exception {
 }
 
 class NetworkException implements Exception {
-  const NetworkException();
+  final String message;
+  const NetworkException([this.message = 'Terjadi kesalahan jaringan, periksa koneksi internet Anda.']);
 
   @override
-  String toString() => 'Terjadi kesalahan jaringan, periksa koneksi internet Anda.';
+  String toString() => message;
 }
 
 class UnauthorizedException implements Exception {
@@ -40,6 +41,14 @@ class InsufficientBalanceException implements Exception {
 class InvalidOtpException implements Exception {
   final String message;
   InvalidOtpException(this.message);
+
+  @override
+  String toString() => message;
+}
+
+class CacheException implements Exception {
+  final String message;
+  const CacheException(this.message);
 
   @override
   String toString() => message;

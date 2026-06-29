@@ -12,6 +12,8 @@ class AccountPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthUnauthenticated) {
@@ -22,15 +24,14 @@ class AccountPage extends StatelessWidget {
         final user = state is AuthAuthenticated ? state.user : null;
 
         return Scaffold(
-          backgroundColor: AppColors.bg,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              icon: Icon(Icons.arrow_back_rounded, color: isDark ? Colors.white : AppColors.lightTextPrimary),
               onPressed: () => context.go('/home'),
             ),
-            title: const Text('Profil', style: TextStyle(fontFamily: 'Poppins', color: Colors.white, fontWeight: FontWeight.bold)),
+            title: Text('Profile', style: TextStyle(fontFamily: 'Inter', color: isDark ? Colors.white : AppColors.lightTextPrimary, fontWeight: FontWeight.bold)),
             centerTitle: true,
           ),
           body: SingleChildScrollView(
@@ -47,7 +48,7 @@ class AccountPage extends StatelessWidget {
                         Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(color: AppColors.neonGreen, width: 3),
+                            border: Border.all(color: AppColors.bluePrimary, width: 3),
                           ),
                           child: AppAvatar(name: user?.name ?? 'User', size: 100, bg: Colors.transparent),
                         ),
@@ -56,33 +57,35 @@ class AccountPage extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                             decoration: BoxDecoration(
-                              color: AppColors.neonGreen,
+                              gradient: AppColors.blueGradient,
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: const Text('PRO', style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black)),
+                            child: const Text('PRO', style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white)),
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 24),
-                    Text(user?.name ?? 'Pengguna', style: const TextStyle(fontFamily: 'Poppins', fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                    Text(user?.name ?? 'Pengguna', style: TextStyle(fontFamily: 'Inter', fontSize: 24, fontWeight: FontWeight.bold, color: isDark ? Colors.white : AppColors.lightTextPrimary)),
                     const SizedBox(height: 4),
-                    Text(user?.email ?? '', style: const TextStyle(fontFamily: 'Inter', fontSize: 14, color: Colors.white54)),
+                    Text(user?.email ?? '', style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: isDark ? Colors.white54 : AppColors.lightTextSecondary)),
                   ],
                 ),
                 const SizedBox(height: 32),
                 
                 // General Settings
-                _buildSectionTitle('Pengaturan'),
+                _buildSectionTitle('Pengaturan', isDark),
                 _buildSettingsCard(
+                  isDark: isDark,
                   children: [
-                    _Row(icon: Icons.person_outline, title: 'Informasi Pribadi', onTap: () => context.go('/akun/personal-info')),
-                    _Row(icon: Icons.account_balance_wallet_outlined, title: 'Kartu Tersimpan', onTap: () => context.go('/akun/saved-cards')),
-                    _Row(icon: Icons.verified_user_outlined, title: 'Keamanan (2FA)', right: const Text('Aktif', style: TextStyle(color: AppColors.neonGreen, fontSize: 12)), onTap: () => context.go('/setup-2fa')),
+                    _Row(icon: Icons.person_outline_rounded, title: 'Informasi Pribadi', isDark: isDark, onTap: () => context.go('/akun/personal-info')),
+                    _Row(icon: Icons.account_balance_wallet_outlined, title: 'Kartu Tersimpan', isDark: isDark, onTap: () => context.go('/akun/saved-cards')),
+                    _Row(icon: Icons.verified_user_outlined, title: 'Keamanan (2FA)', isDark: isDark, right: const Text('Aktif', style: TextStyle(color: AppColors.bluePrimary, fontSize: 12, fontWeight: FontWeight.w600)), onTap: () => context.go('/setup-2fa')),
                     _Row(
                       icon: Icons.fingerprint_rounded, 
                       title: 'Sidik Jari / Biometrik', 
-                      right: _BiometricToggle(), 
+                      isDark: isDark,
+                      right: _BiometricToggle(isDark: isDark), 
                       onTap: () {},
                     ),
                   ],
@@ -90,12 +93,13 @@ class AccountPage extends StatelessWidget {
                 const SizedBox(height: 24),
                 
                 // Preferences
-                _buildSectionTitle('Preferensi'),
+                _buildSectionTitle('Preferensi', isDark),
                 _buildSettingsCard(
+                  isDark: isDark,
                   children: [
-                    _Row(icon: Icons.notifications_none, title: 'Notifikasi', right: _Toggle(), onTap: () {}),
-                    _Row(icon: Icons.dark_mode_outlined, title: 'Mode Gelap', right: _Toggle(), onTap: () {}),
-                    _Row(icon: Icons.language, title: 'Bahasa', right: const Text('ID', style: TextStyle(color: Colors.white54, fontSize: 12)), onTap: () {}),
+                    _Row(icon: Icons.notifications_none_rounded, title: 'Notifikasi', isDark: isDark, right: _Toggle(isDark: isDark), onTap: () {}),
+                    _Row(icon: Icons.dark_mode_outlined, title: 'Mode Gelap', isDark: isDark, right: _Toggle(isDark: isDark), onTap: () {}),
+                    _Row(icon: Icons.language_rounded, title: 'Bahasa', isDark: isDark, right: Text('ID', style: TextStyle(color: isDark ? Colors.white54 : AppColors.lightTextSecondary, fontSize: 12, fontWeight: FontWeight.w600)), onTap: () {}),
                   ],
                 ),
                 const SizedBox(height: 32),
@@ -107,17 +111,17 @@ class AccountPage extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     decoration: BoxDecoration(
-                      color: AppColors.red.withOpacity(0.1),
+                      color: AppColors.danger.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppColors.red.withOpacity(0.3)),
+                      border: Border.all(color: AppColors.danger.withOpacity(0.3)),
                     ),
                     child: const Center(
-                      child: Text('Keluar', style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.red)),
+                      child: Text('Keluar', style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.danger)),
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Center(child: Text('Danantara · v1.0.0', style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: Colors.white54))),
+                Center(child: Text('Bankling · v1.0.0', style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: isDark ? Colors.white54 : AppColors.lightTextSecondary))),
                 const SizedBox(height: 40),
               ],
             ),
@@ -127,29 +131,29 @@ class AccountPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(String title, bool isDark) {
     return Padding(
       padding: const EdgeInsets.only(left: 8, bottom: 12),
       child: Align(
         alignment: Alignment.centerLeft,
-        child: Text(title, style: const TextStyle(fontFamily: 'Poppins', fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white54)),
+        child: Text(title, style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: isDark ? Colors.white54 : AppColors.lightTextSecondary)),
       ),
     );
   }
 
-  Widget _buildSettingsCard({required List<Widget> children}) {
+  Widget _buildSettingsCard({required List<Widget> children, required bool isDark}) {
     List<Widget> separatedChildren = [];
     for (int i = 0; i < children.length; i++) {
       separatedChildren.add(children[i]);
       if (i < children.length - 1) {
-        separatedChildren.add(const Divider(height: 1, color: Colors.white12, indent: 56));
+        separatedChildren.add(Divider(height: 1, color: isDark ? Colors.white12 : AppColors.lightLine, indent: 56));
       }
     }
     return Container(
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
+        color: isDark ? Colors.black.withOpacity(0.3) : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white24),
+        border: Border.all(color: isDark ? Colors.white24 : AppColors.lightLine),
       ),
       child: Column(children: separatedChildren),
     );
@@ -161,8 +165,9 @@ class _Row extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
   final Widget? right;
+  final bool isDark;
 
-  const _Row({required this.icon, required this.title, required this.onTap, this.right});
+  const _Row({required this.icon, required this.title, required this.onTap, required this.isDark, this.right});
 
   @override
   Widget build(BuildContext context) {
@@ -175,14 +180,14 @@ class _Row extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: Colors.white12, borderRadius: BorderRadius.circular(8)),
-              child: Icon(icon, size: 20, color: Colors.white),
+              decoration: BoxDecoration(color: isDark ? Colors.white12 : AppColors.lightLine, borderRadius: BorderRadius.circular(8)),
+              child: Icon(icon, size: 20, color: isDark ? Colors.white : AppColors.bluePrimary),
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: Text(title, style: const TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)),
+              child: Text(title, style: TextStyle(fontFamily: 'Inter', fontSize: 14, fontWeight: FontWeight.w600, color: isDark ? Colors.white : AppColors.lightTextPrimary)),
             ),
-            right ?? const Icon(Icons.chevron_right_rounded, size: 20, color: Colors.white54),
+            right ?? Icon(Icons.chevron_right_rounded, size: 20, color: isDark ? Colors.white54 : AppColors.lightTextSecondary),
           ],
         ),
       ),
@@ -191,6 +196,9 @@ class _Row extends StatelessWidget {
 }
 
 class _Toggle extends StatefulWidget {
+  final bool isDark;
+  const _Toggle({required this.isDark});
+  
   @override
   State<_Toggle> createState() => _ToggleState();
 }
@@ -206,7 +214,7 @@ class _ToggleState extends State<_Toggle> {
         width: 44,
         height: 24,
         decoration: BoxDecoration(
-          color: _on ? AppColors.neonGreen : Colors.white24,
+          color: _on ? AppColors.bluePrimary : (widget.isDark ? Colors.white24 : AppColors.lightLine),
           borderRadius: BorderRadius.circular(20),
         ),
         child: AnimatedAlign(
@@ -217,7 +225,7 @@ class _ToggleState extends State<_Toggle> {
             width: 20,
             height: 20,
             decoration: const BoxDecoration(
-              color: Colors.black,
+              color: Colors.white,
               shape: BoxShape.circle,
             ),
           ),
@@ -228,6 +236,9 @@ class _ToggleState extends State<_Toggle> {
 }
 
 class _BiometricToggle extends StatefulWidget {
+  final bool isDark;
+  const _BiometricToggle({required this.isDark});
+  
   @override
   State<_BiometricToggle> createState() => _BiometricToggleState();
 }
@@ -274,7 +285,7 @@ class _BiometricToggleState extends State<_BiometricToggle> {
         width: 44,
         height: 24,
         decoration: BoxDecoration(
-          color: _on ? AppColors.neonGreen : Colors.white24,
+          color: _on ? AppColors.bluePrimary : (widget.isDark ? Colors.white24 : AppColors.lightLine),
           borderRadius: BorderRadius.circular(20),
         ),
         child: AnimatedAlign(
@@ -285,7 +296,7 @@ class _BiometricToggleState extends State<_BiometricToggle> {
             width: 20,
             height: 20,
             decoration: const BoxDecoration(
-              color: Colors.black,
+              color: Colors.white,
               shape: BoxShape.circle,
             ),
           ),

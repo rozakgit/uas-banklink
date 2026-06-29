@@ -13,39 +13,53 @@ class AppTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(24),
-        topRight: Radius.circular(24),
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: isDark ? Colors.black26 : Colors.black.withValues(alpha: 0.05),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
+          ),
+        ],
       ),
-      child: BottomAppBar(
-        color: const Color(0xFFDFF26E), // Revert to Neon Green background
-        shape: const CircularNotchedRectangle(), // Creates the transparent 'U' cutout
-        notchMargin: 6.0,
-        padding: EdgeInsets.zero, // Remove default padding
-        child: SizedBox(
-          height: 52, // Fixed height for exact proportions
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center, // Aligns everything exactly on the Y axis
-            children: [
-              Expanded(child: _TabItem(icon: Icons.home_rounded, label: 'Beranda', tabKey: 'home', active: active, onTap: onTab)),
-              Expanded(child: _TabItem(icon: Icons.credit_card_rounded, label: 'Kartu', tabKey: 'promo', active: active, onTap: onTab)),
-              
-              // Empty space for the floating QRIS button
-              const SizedBox(width: 56),
-              
-              Expanded(child: _TabItem(icon: Icons.history_rounded, label: 'Riwayat', tabKey: 'history', active: active, onTap: onTab)),
-              Expanded(child: _TabItem(icon: Icons.person_rounded, label: 'Profil', tabKey: 'akun', active: active, onTap: onTab)),
-            ],
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+        child: BottomAppBar(
+          color: isDark ? AppColors.darkSurface : Colors.white,
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 8.0,
+          padding: EdgeInsets.zero,
+          elevation: 0,
+          child: SizedBox(
+            height: 65, // Taller for better touch target
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _TabItem(icon: Icons.home_rounded, label: 'Home', tabKey: 'home', active: active, onTap: onTab),
+                  _TabItem(icon: Icons.local_offer_rounded, label: 'Promo', tabKey: 'promo', active: active, onTap: onTab),
+                  
+                  // Empty space for the floating QRIS button
+                  const SizedBox(width: 48),
+                  
+                  _TabItem(icon: Icons.history_rounded, label: 'History', tabKey: 'history', active: active, onTap: onTab),
+                  _TabItem(icon: Icons.settings_rounded, label: 'Settings', tabKey: 'akun', active: active, onTap: onTab),
+                ],
+              ),
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
 
 class _TabItem extends StatelessWidget {
@@ -66,29 +80,37 @@ class _TabItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isActive = active == tabKey;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    final activeColor = AppColors.bluePrimary;
+    final inactiveColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+
     return GestureDetector(
       onTap: () => onTap(tabKey),
       behavior: HitTestBehavior.opaque,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 20,
-            color: isActive ? Colors.black : Colors.black45, // Black icons on green background
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 9,
-              fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
-              color: isActive ? Colors.black : Colors.black45,
+      child: SizedBox(
+        width: 60,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 24,
+              color: isActive ? activeColor : inactiveColor,
             ),
-          ),
-        ],
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 10,
+                fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+                color: isActive ? activeColor : inactiveColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

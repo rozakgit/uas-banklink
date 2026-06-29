@@ -31,7 +31,7 @@ class AppLogo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Danantara',
+              'Bankling',
               style: TextStyle(
                 fontFamily: fontFamily,
                 fontSize: size * 0.3,

@@ -28,7 +28,7 @@ class NotificationService {
 
     // Buat channel secara eksplisit agar FCM langsung mengenalinya
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'danantara_high_importance_v1', // id baru agar Android me-reset setting
+      'bankling_high_importance_v1', // id baru agar Android me-reset setting
       'High Importance Notifications', // title
       description: 'This channel is used for important notifications.',
       importance: Importance.max,
@@ -85,7 +85,7 @@ class NotificationService {
         body: notification.body,
         notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
-            'danantara_high_importance_v1', // id
+            'bankling_high_importance_v1', // id
             'High Importance Notifications', // title
             channelDescription:
                 'This channel is used for important notifications.', // description

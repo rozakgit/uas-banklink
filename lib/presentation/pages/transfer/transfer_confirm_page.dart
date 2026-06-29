@@ -28,8 +28,9 @@ class TransferConfirmPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final total = amount + fee;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.bg,
       appBar: AppTopBar(title: 'Konfirmasi', onBack: () => context.go('/transfer/amount')),
       body: Column(
         children: [
@@ -54,39 +55,39 @@ class TransferConfirmPage extends StatelessWidget {
                                 width: 56,
                                 height: 56,
                                 decoration: BoxDecoration(
-                                  color: Colors.white12,
+                                  color: isDark ? Colors.white12 : AppColors.lightLine,
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: Center(
                                   child: Text(recipient['name'] as String,
                                       style: const TextStyle(
-                                        fontFamily: 'PlusJakartaSans',
+                                        fontFamily: 'Inter',
                                         fontWeight: FontWeight.w800,
-                                        color: AppColors.neonGreen,
+                                        color: AppColors.bluePrimary,
                                       )),
                                 ),
                               )
                             : AppAvatar(name: recipient['name'] as String, size: 56),
                         const SizedBox(height: 12),
-                        const Text('Transfer ke',
-                            style: TextStyle(fontSize: 13, color: Colors.white54)),
+                        Text('Transfer ke',
+                            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: isDark ? Colors.white54 : AppColors.lightTextSecondary)),
                         const SizedBox(height: 2),
                         Text(channel == 'bank' ? (recipient['sub'] as String) : (recipient['name'] as String),
-                            style: const TextStyle(
-                              fontFamily: 'PlusJakartaSans',
+                            style: TextStyle(
+                              fontFamily: 'Inter',
                               fontSize: 18,
                               fontWeight: FontWeight.w800,
-                              color: Colors.white,
+                              color: isDark ? Colors.white : AppColors.lightTextPrimary,
                             )),
                         Text(recipient['sub'] as String,
-                            style: const TextStyle(fontSize: 13, color: Colors.white54)),
+                            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: isDark ? Colors.white54 : AppColors.lightTextSecondary)),
                         const SizedBox(height: 14),
                         Text(CurrencyFormatter.format(amount),
                             style: const TextStyle(
-                              fontFamily: 'PlusJakartaSans',
+                              fontFamily: 'Inter',
                               fontSize: 34,
                               fontWeight: FontWeight.w800,
-                              color: AppColors.neonGreen,
+                              color: AppColors.bluePrimary,
                               letterSpacing: -0.5,
                             )),
                       ],
@@ -103,15 +104,15 @@ class TransferConfirmPage extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        _Line(label: 'Nominal', value: CurrencyFormatter.format(amount)),
-                        const Divider(height: 1, color: Colors.white12),
-                        _Line(label: 'Biaya admin', value: fee > 0 ? CurrencyFormatter.format(fee) : 'Gratis'),
+                        _Line(label: 'Nominal', value: CurrencyFormatter.format(amount), isDark: isDark),
+                        Divider(height: 1, color: isDark ? Colors.white12 : AppColors.lightLine),
+                        _Line(label: 'Biaya admin', value: fee > 0 ? CurrencyFormatter.format(fee) : 'Gratis', isDark: isDark),
                         if (note.isNotEmpty) ...[
-                          const Divider(height: 1, color: Colors.white12),
-                          _Line(label: 'Catatan', value: note),
+                          Divider(height: 1, color: isDark ? Colors.white12 : AppColors.lightLine),
+                          _Line(label: 'Catatan', value: note, isDark: isDark),
                         ],
-                        const Divider(height: 1, color: Colors.white12),
-                        _Line(label: 'Total', value: CurrencyFormatter.format(total), bold: true),
+                        Divider(height: 1, color: isDark ? Colors.white12 : AppColors.lightLine),
+                        _Line(label: 'Total', value: CurrencyFormatter.format(total), bold: true, isDark: isDark),
                       ],
                     ),
                   ),
@@ -120,26 +121,26 @@ class TransferConfirmPage extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(13),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3),
+                      color: isDark ? Colors.black.withOpacity(0.3) : Colors.white,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white24),
+                      border: Border.all(color: isDark ? Colors.white24 : AppColors.lightLine),
                     ),
                     child: Row(
                       children: [
                         const AppLogo(size: 30),
                         const SizedBox(width: 12),
-                        const Expanded(
+                        Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Saldo DKG',
-                                  style: TextStyle(fontFamily: 'PlusJakartaSans', fontSize: 13.5, fontWeight: FontWeight.w700, color: Colors.white)),
+                              Text('Saldo Bankling',
+                                  style: TextStyle(fontFamily: 'Inter', fontSize: 13.5, fontWeight: FontWeight.w700, color: isDark ? Colors.white : AppColors.lightTextPrimary)),
                               Text('Sumber dana',
-                                  style: TextStyle(fontSize: 12, color: Colors.white54)),
+                                  style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: isDark ? Colors.white54 : AppColors.lightTextSecondary)),
                             ],
                           ),
                         ),
-                        const Icon(Icons.check_rounded, size: 20, color: AppColors.neonGreen),
+                        const Icon(Icons.check_rounded, size: 20, color: AppColors.bluePrimary),
                       ],
                     ),
                   ),
@@ -149,10 +150,10 @@ class TransferConfirmPage extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 18),
-            color: AppColors.bg,
+            color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
             child: AppButton(
               label: 'Konfirmasi & Bayar',
-              icon: const Icon(Icons.lock_outline_rounded, size: 19, color: Colors.black),
+              icon: const Icon(Icons.lock_outline_rounded, size: 19, color: Colors.white),
               onPressed: () => context.go('/pin', extra: {
                 'kind': 'transfer',
                 'recipient': recipient,
@@ -173,7 +174,8 @@ class _Line extends StatelessWidget {
   final String label;
   final String value;
   final bool bold;
-  const _Line({required this.label, required this.value, this.bold = false});
+  final bool isDark;
+  const _Line({required this.label, required this.value, this.bold = false, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -184,17 +186,17 @@ class _Line extends StatelessWidget {
         children: [
           Text(label,
               style: TextStyle(
-                fontFamily: 'PlusJakartaSans',
+                fontFamily: 'Inter',
                 fontSize: bold ? 15.5 : 14,
                 fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
-                color: Colors.white54,
+                color: isDark ? Colors.white54 : AppColors.lightTextSecondary,
               )),
           Text(value,
               style: TextStyle(
-                fontFamily: 'PlusJakartaSans',
+                fontFamily: 'Inter',
                 fontSize: bold ? 15.5 : 14,
                 fontWeight: bold ? FontWeight.w800 : FontWeight.w700,
-                color: Colors.white,
+                color: isDark ? Colors.white : AppColors.lightTextPrimary,
               )),
         ],
       ),

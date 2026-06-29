@@ -11,6 +11,7 @@ import 'injection/injection_container.dart' as di;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'core/services/notification_service.dart';
 import 'presentation/blocs/auth/auth_bloc.dart';
+import 'presentation/blocs/theme/theme_cubit.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -73,11 +74,22 @@ class DompetKampusApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Danantara',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      routerConfig: AppRouter.router,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: di.sl<ThemeCubit>()),
+      ],
+      child: BlocBuilder<ThemeCubit, ThemeMode>(
+        builder: (context, themeMode) {
+          return MaterialApp.router(
+            title: 'Bankling',
+            debugShowCheckedModeBanner: false,
+            themeMode: themeMode,
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            routerConfig: AppRouter.router,
+          );
+        },
+      ),
     );
   }
 }

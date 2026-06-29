@@ -50,8 +50,9 @@ class _TransferAmountPageState extends State<TransferAmountPage> {
     final enough = _amount <= balance;
     final valid = _amount >= 1000 && enough;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return Scaffold(
-      backgroundColor: AppColors.bg,
       appBar: AppTopBar(title: 'Nominal Transfer', onBack: () => context.go('/transfer')),
       body: Column(
         children: [
@@ -64,9 +65,9 @@ class _TransferAmountPageState extends State<TransferAmountPage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3),
+                      color: isDark ? Colors.black.withOpacity(0.3) : Colors.white,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white24),
+                      border: Border.all(color: isDark ? Colors.white24 : AppColors.lightLine),
                     ),
                     child: Row(
                       children: [
@@ -75,15 +76,15 @@ class _TransferAmountPageState extends State<TransferAmountPage> {
                                 width: 42,
                                 height: 42,
                                 decoration: BoxDecoration(
-                                  color: Colors.white12,
+                                  color: isDark ? Colors.white12 : AppColors.lightLine,
                                   borderRadius: BorderRadius.circular(11),
                                 ),
                                 child: Center(
                                   child: Text(widget.recipient['name'] as String,
                                       style: const TextStyle(
-                                        fontFamily: 'PlusJakartaSans',
+                                        fontFamily: 'Inter',
                                         fontWeight: FontWeight.w800,
-                                        color: AppColors.neonGreen,
+                                        color: AppColors.bluePrimary,
                                         fontSize: 13,
                                       )),
                                 ),
@@ -98,19 +99,19 @@ class _TransferAmountPageState extends State<TransferAmountPage> {
                                 widget.channel == 'bank'
                                     ? (widget.recipient['sub'] as String)
                                     : (widget.recipient['name'] as String),
-                                style: const TextStyle(
-                                  fontFamily: 'PlusJakartaSans',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
                                   fontSize: 14.5,
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.white,
+                                  color: isDark ? Colors.white : AppColors.lightTextPrimary,
                                 ),
                               ),
                               Text(widget.recipient['sub'] as String,
-                                  style: const TextStyle(fontSize: 12.5, color: Colors.white54)),
+                                  style: TextStyle(fontSize: 12.5, color: isDark ? Colors.white54 : AppColors.lightTextSecondary)),
                             ],
                           ),
                         ),
-                        const Icon(Icons.verified_user_outlined, size: 20, color: AppColors.neonGreen),
+                        const Icon(Icons.verified_user_outlined, size: 20, color: AppColors.bluePrimary),
                       ],
                     ),
                   ),
@@ -120,8 +121,8 @@ class _TransferAmountPageState extends State<TransferAmountPage> {
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Column(
                       children: [
-                        const Text('Nominal',
-                            style: TextStyle(fontFamily: 'PlusJakartaSans', fontSize: 13, color: Colors.white54, fontWeight: FontWeight.w600)),
+                        Text('Nominal',
+                            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: isDark ? Colors.white54 : AppColors.lightTextSecondary, fontWeight: FontWeight.w600)),
                         const SizedBox(height: 6),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -130,18 +131,18 @@ class _TransferAmountPageState extends State<TransferAmountPage> {
                           children: [
                             Text('Rp ',
                                 style: TextStyle(
-                                  fontFamily: 'PlusJakartaSans',
+                                  fontFamily: 'Inter',
                                   fontSize: 22,
                                   fontWeight: FontWeight.w700,
-                                  color: _amount > 0 ? Colors.white : Colors.white24,
+                                  color: _amount > 0 ? (isDark ? Colors.white : AppColors.lightTextPrimary) : (isDark ? Colors.white24 : Colors.black26),
                                 )),
                             Text(
                               _amount > 0 ? _amount.toLocaleString() : '0',
                               style: TextStyle(
-                                fontFamily: 'PlusJakartaSans',
+                                fontFamily: 'Inter',
                                 fontSize: 42,
                                 fontWeight: FontWeight.w800,
-                                color: _amount > 0 ? Colors.white : Colors.white24,
+                                color: _amount > 0 ? (isDark ? Colors.white : AppColors.lightTextPrimary) : (isDark ? Colors.white24 : Colors.black26),
                                 letterSpacing: -1,
                               ),
                             ),
@@ -151,17 +152,17 @@ class _TransferAmountPageState extends State<TransferAmountPage> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: enough ? AppColors.neonGreen.withOpacity(0.1) : AppColors.red.withOpacity(0.1),
+                            color: enough ? AppColors.bluePrimary.withOpacity(0.1) : AppColors.danger.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: enough ? AppColors.neonGreen.withOpacity(0.3) : AppColors.red.withOpacity(0.3)),
+                            border: Border.all(color: enough ? AppColors.bluePrimary.withOpacity(0.3) : AppColors.danger.withOpacity(0.3)),
                           ),
                           child: Text(
                             enough ? 'Total Saldo: ${CurrencyFormatter.format(balance)}' : 'Saldo tidak cukup (${CurrencyFormatter.format(balance)})',
                             style: TextStyle(
-                              fontFamily: 'PlusJakartaSans',
+                              fontFamily: 'Inter',
                               fontSize: 13,
                               fontWeight: FontWeight.w700,
-                              color: enough ? AppColors.neonGreen : AppColors.red,
+                              color: enough ? AppColors.bluePrimary : AppColors.danger,
                             ),
                           ),
                         ),
@@ -175,14 +176,14 @@ class _TransferAmountPageState extends State<TransferAmountPage> {
                               decoration: BoxDecoration(
                                 color: Colors.transparent,
                                 borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: Colors.white24, width: 1.4),
+                                border: Border.all(color: isDark ? Colors.white24 : AppColors.lightLine, width: 1.4),
                               ),
                               child: Text(CurrencyFormatter.formatInt(c),
-                                  style: const TextStyle(
-                                    fontFamily: 'PlusJakartaSans',
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
                                     fontSize: 13,
                                     fontWeight: FontWeight.w700,
-                                    color: Colors.white70,
+                                    color: isDark ? Colors.white70 : AppColors.lightTextSecondary,
                                   )),
                             ),
                           )).toList(),

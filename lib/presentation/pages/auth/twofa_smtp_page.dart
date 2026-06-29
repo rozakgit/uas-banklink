@@ -6,7 +6,6 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/auth/otp_bloc.dart';
-import '../../widgets/app_button.dart';
 import '../../widgets/code_input.dart';
 import '../../widgets/feature_icon.dart';
 
@@ -70,19 +69,18 @@ class _TwoFASmtpPageState extends State<TwoFASmtpPage> {
           });
         } else if (state is OtpError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: AppColors.red),
+            SnackBar(content: Text(state.message), backgroundColor: AppColors.danger),
           );
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.bg,
         body: SafeArea(
           child: Column(
             children: [
               Align(
                 alignment: Alignment.topLeft,
                 child: IconButton(
-                  icon: const Icon(DkgIcons.arrowLeft, color: Colors.white),
+                  icon: Icon(DkgIcons.arrowLeft, color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.lightTextPrimary),
                   onPressed: () => context.go(widget.mode == 'setup' ? '/setup-2fa' : '/login'),
                 ),
               ),
@@ -91,20 +89,20 @@ class _TwoFASmtpPageState extends State<TwoFASmtpPage> {
                   padding: const EdgeInsets.fromLTRB(28, 8, 28, 24),
                   child: Column(
                     children: [
-                      const FeatureIcon(icon: DkgIcons.mail, tone: 'green', size: 74, iconSize: 36),
+                      const FeatureIcon(icon: DkgIcons.mail, tone: 'blue', size: 74, iconSize: 36),
                       const SizedBox(height: 18),
-                      const Text('Masukkan Email OTP',
+                      Text('Masukkan Email OTP',
                           style: TextStyle(
-                            fontFamily: 'PlusJakartaSans',
+                            fontFamily: 'Inter',
                             fontSize: 23,
                             fontWeight: FontWeight.w800,
-                            color: Colors.white,
+                            color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.lightTextPrimary,
                             letterSpacing: -0.3,
                           )),
                       const SizedBox(height: 8),
-                      const Text('Kode 6 digit dikirim ke email kamu via SMTP',
+                      Text('Kode 6 digit dikirim ke email kamu via SMTP',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 14.5, color: Colors.white70, height: 1.55)),
+                          style: TextStyle(fontSize: 14.5, color: Theme.of(context).brightness == Brightness.dark ? Colors.white70 : AppColors.lightTextSecondary, height: 1.55)),
                       const SizedBox(height: 28),
                       AnimatedContainer(
                         duration: const Duration(milliseconds: 80),
@@ -115,8 +113,8 @@ class _TwoFASmtpPageState extends State<TwoFASmtpPage> {
                         const SizedBox(height: 12),
                         const Text('Kode salah',
                             style: TextStyle(
-                              fontFamily: 'PlusJakartaSans',
-                              color: AppColors.red,
+                              fontFamily: 'Inter',
+                              color: AppColors.danger,
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
                             )),
@@ -125,19 +123,19 @@ class _TwoFASmtpPageState extends State<TwoFASmtpPage> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
                         decoration: BoxDecoration(
-                          color: AppColors.neonGreen.withOpacity(0.1),
+                          color: AppColors.bluePrimary.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: const [
-                            Icon(DkgIcons.info, size: 16, color: AppColors.neonGreen),
+                            Icon(DkgIcons.info, size: 16, color: AppColors.bluePrimary),
                             SizedBox(width: 8),
                             Text('Cek email inbox atau spam kamu',
                                 style: TextStyle(
-                                  fontFamily: 'PlusJakartaSans',
+                                  fontFamily: 'Inter',
                                   fontSize: 12.5,
-                                  color: AppColors.neonGreen,
+                                  color: AppColors.bluePrimary,
                                   fontWeight: FontWeight.w600,
                                 )),
                           ],
@@ -147,18 +145,18 @@ class _TwoFASmtpPageState extends State<TwoFASmtpPage> {
                       _timer > 0
                           ? Text(
                               'Kirim ulang dalam 00:${_timer.toString().padLeft(2, '0')}',
-                              style: const TextStyle(fontSize: 13.5, color: Colors.white54),
+                              style: TextStyle(fontSize: 13.5, color: Theme.of(context).brightness == Brightness.dark ? Colors.white54 : AppColors.lightTextSecondary),
                             )
                           : TextButton.icon(
                               onPressed: () {
                                 context.read<OtpBloc>().add(OtpSendEmail());
                                 _startTimer();
                               },
-                              icon: const Icon(DkgIcons.refresh, size: 16, color: AppColors.neonGreen),
+                              icon: const Icon(DkgIcons.refresh, size: 16, color: AppColors.bluePrimary),
                               label: const Text('Kirim ulang kode',
                                   style: TextStyle(
-                                    fontFamily: 'PlusJakartaSans',
-                                    color: AppColors.neonGreen,
+                                    fontFamily: 'Inter',
+                                    color: AppColors.bluePrimary,
                                     fontWeight: FontWeight.w700,
                                     fontSize: 14,
                                   )),

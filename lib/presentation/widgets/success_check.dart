@@ -34,7 +34,7 @@ class _SuccessCheckState extends State<SuccessCheck> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     final color = widget.tone == 'green' ? AppColors.green : AppColors.primary;
-    final bgColor = widget.tone == 'green' ? AppColors.greenSurface : AppColors.primarySurface;
+    final bgColor = widget.tone == 'green' ? AppColors.green.withOpacity(0.15) : AppColors.primarySurface;
 
     return ScaleTransition(
       scale: _scale,

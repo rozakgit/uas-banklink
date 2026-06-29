@@ -26,9 +26,11 @@ class PaymentDeeplinkPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final payload = data;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     if (payload is! DeeplinkPaymentData) {
       final message = payload is String ? payload : 'Invalid payment link.';
-      return _ErrorView(message: message);
+      return _ErrorView(message: message, isDark: isDark);
     }
 
     return PopScope(
@@ -37,7 +39,6 @@ class PaymentDeeplinkPage extends StatelessWidget {
         if (!didPop) _cancel(context, payload);
       },
       child: Scaffold(
-        backgroundColor: AppColors.bg,
         body: SafeArea(
           child: Column(
             children: [
@@ -46,11 +47,11 @@ class PaymentDeeplinkPage extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white),
+                      icon: Icon(Icons.close, color: isDark ? Colors.white : AppColors.lightTextPrimary),
                       onPressed: () => _cancel(context, payload),
                     ),
-                    const Expanded(
-                      child: Text('Konfirmasi Pembayaran', textAlign: TextAlign.center, style: TextStyle(fontFamily: 'Poppins', fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                    Expanded(
+                      child: Text('Konfirmasi Pembayaran', textAlign: TextAlign.center, style: TextStyle(fontFamily: 'Inter', fontSize: 18, fontWeight: FontWeight.bold, color: isDark ? Colors.white : AppColors.lightTextPrimary)),
                     ),
                     const SizedBox(width: 48), // Balance centering
                   ],
@@ -65,36 +66,36 @@ class PaymentDeeplinkPage extends StatelessWidget {
                       Container(
                         width: 80,
                         height: 80,
-                        decoration: BoxDecoration(color: Colors.white12, shape: BoxShape.circle, border: Border.all(color: AppColors.neonGreen)),
-                        child: const Icon(Icons.storefront, color: AppColors.neonGreen, size: 40),
+                        decoration: BoxDecoration(color: isDark ? Colors.white12 : AppColors.lightLine, shape: BoxShape.circle, border: Border.all(color: AppColors.bluePrimary)),
+                        child: const Icon(Icons.storefront, color: AppColors.bluePrimary, size: 40),
                       ),
                       const SizedBox(height: 16),
-                      Text(payload.merchantName, style: const TextStyle(fontFamily: 'Poppins', fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+                      Text(payload.merchantName, style: TextStyle(fontFamily: 'Inter', fontSize: 20, fontWeight: FontWeight.bold, color: isDark ? Colors.white : AppColors.lightTextPrimary)),
                       const SizedBox(height: 32),
-                      const Text('Total Pembayaran', style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: Colors.white54)),
+                      Text('Total Pembayaran', style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: isDark ? Colors.white54 : AppColors.lightTextSecondary)),
                       const SizedBox(height: 8),
                       FittedBox(
                         fit: BoxFit.scaleDown,
-                        child: Text(CurrencyFormatter.format(payload.amount), style: const TextStyle(fontFamily: 'Poppins', fontSize: 32, fontWeight: FontWeight.bold, color: AppColors.neonGreen)),
+                        child: Text(CurrencyFormatter.format(payload.amount), style: const TextStyle(fontFamily: 'Inter', fontSize: 32, fontWeight: FontWeight.bold, color: AppColors.bluePrimary)),
                       ),
                       const SizedBox(height: 40),
                       
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.3),
+                          color: isDark ? Colors.black.withOpacity(0.3) : Colors.white,
                           borderRadius: BorderRadius.circular(24),
-                          border: Border.all(color: Colors.white24),
+                          border: Border.all(color: isDark ? Colors.white24 : AppColors.lightLine),
                         ),
                         child: Column(
                           children: [
-                            _DetailRow(label: 'Keterangan', value: payload.description),
-                            const Divider(height: 1, color: Colors.white12),
+                            _DetailRow(label: 'Keterangan', value: payload.description, isDark: isDark),
+                            Divider(height: 1, color: isDark ? Colors.white12 : AppColors.lightLine),
                             if (payload.reference != null && payload.reference!.isNotEmpty) ...[
-                              _DetailRow(label: 'Referensi', value: payload.reference!),
-                              const Divider(height: 1, color: Colors.white12),
+                              _DetailRow(label: 'Referensi', value: payload.reference!, isDark: isDark),
+                              Divider(height: 1, color: isDark ? Colors.white12 : AppColors.lightLine),
                             ],
-                            const _DetailRow(label: 'Metode Pembayaran', value: 'Saldo Danantara'),
+                            _DetailRow(label: 'Metode Pembayaran', value: 'Saldo Bankling', isDark: isDark),
                           ],
                         ),
                       ),
@@ -118,14 +119,14 @@ class PaymentDeeplinkPage extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 18),
                     decoration: BoxDecoration(
-                      color: AppColors.neonGreen,
+                      color: AppColors.bluePrimary,
                       borderRadius: BorderRadius.circular(16),
-                      boxShadow: [BoxShadow(color: AppColors.neonGreen.withOpacity(0.3), blurRadius: 8)],
+                      boxShadow: [BoxShadow(color: AppColors.bluePrimary.withOpacity(0.3), blurRadius: 8)],
                     ),
                     child: Center(
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
-                        child: Text('Bayar ${CurrencyFormatter.format(payload.amount)}', style: const TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)),
+                        child: Text('Bayar ${CurrencyFormatter.format(payload.amount)}', style: const TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                       ),
                     ),
                   ),
@@ -142,7 +143,8 @@ class PaymentDeeplinkPage extends StatelessWidget {
 class _DetailRow extends StatelessWidget {
   final String label;
   final String value;
-  const _DetailRow({required this.label, required this.value});
+  final bool isDark;
+  const _DetailRow({required this.label, required this.value, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -152,8 +154,8 @@ class _DetailRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: Text(label, style: const TextStyle(fontSize: 14, color: Colors.white54, fontFamily: 'Inter'))),
-          Expanded(child: Text(value, textAlign: TextAlign.right, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Inter'))),
+          Expanded(child: Text(label, style: TextStyle(fontSize: 14, color: isDark ? Colors.white54 : AppColors.lightTextSecondary, fontFamily: 'Inter'))),
+          Expanded(child: Text(value, textAlign: TextAlign.right, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: isDark ? Colors.white : AppColors.lightTextPrimary, fontFamily: 'Inter'))),
         ],
       ),
     );
@@ -162,31 +164,31 @@ class _DetailRow extends StatelessWidget {
 
 class _ErrorView extends StatelessWidget {
   final String message;
-  const _ErrorView({required this.message});
+  final bool isDark;
+  const _ErrorView({required this.message, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bg,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline, size: 64, color: AppColors.red),
+              const Icon(Icons.error_outline, size: 64, color: AppColors.danger),
               const SizedBox(height: 24),
-              const Text('Invalid Payment Link', style: TextStyle(fontFamily: 'Poppins', fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+              Text('Invalid Payment Link', style: TextStyle(fontFamily: 'Inter', fontSize: 24, fontWeight: FontWeight.bold, color: isDark ? Colors.white : AppColors.lightTextPrimary)),
               const SizedBox(height: 8),
-              Text(message, textAlign: TextAlign.center, style: const TextStyle(fontFamily: 'Inter', fontSize: 16, color: Colors.white54)),
+              Text(message, textAlign: TextAlign.center, style: TextStyle(fontFamily: 'Inter', fontSize: 16, color: isDark ? Colors.white54 : AppColors.lightTextSecondary)),
               const SizedBox(height: 40),
               GestureDetector(
                 onTap: () => context.go('/home'),
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 18),
-                  decoration: BoxDecoration(color: AppColors.neonGreen, borderRadius: BorderRadius.circular(16)),
-                  child: const Center(child: Text('Return to Home', style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black))),
+                  decoration: BoxDecoration(color: AppColors.bluePrimary, borderRadius: BorderRadius.circular(16)),
+                  child: const Center(child: Text('Return to Home', style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white))),
                 ),
               ),
             ],

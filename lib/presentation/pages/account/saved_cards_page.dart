@@ -8,16 +8,17 @@ class SavedCardsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.bg,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: isDark ? Colors.white : AppColors.lightTextPrimary),
           onPressed: () => context.canPop() ? context.pop() : context.go('/akun'),
         ),
-        title: const Text('Kartu Tersimpan', style: TextStyle(fontFamily: 'Poppins', color: Colors.white, fontWeight: FontWeight.bold)),
+        title: Text('Kartu Tersimpan', style: TextStyle(fontFamily: 'Inter', color: isDark ? Colors.white : AppColors.lightTextPrimary, fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -25,7 +26,7 @@ class SavedCardsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Kartu Utama', style: TextStyle(fontFamily: 'Poppins', fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+            Text('Kartu Utama', style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: isDark ? Colors.white : AppColors.lightTextPrimary)),
             const SizedBox(height: 16),
             _buildVirtualCard(context, 'Fajri Khaerullah'),
             const SizedBox(height: 32),
@@ -37,14 +38,14 @@ class SavedCardsPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.neonGreen),
+                  border: Border.all(color: AppColors.bluePrimary),
                 ),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.add, color: AppColors.neonGreen),
+                    Icon(Icons.add, color: AppColors.bluePrimary),
                     SizedBox(width: 8),
-                    Text('Tambah Kartu Baru', style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.neonGreen)),
+                    Text('Tambah Kartu Baru', style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.bluePrimary)),
                   ],
                 ),
               ),
@@ -192,15 +193,15 @@ class SavedCardsPage extends StatelessWidget {
                   Clipboard.setData(const ClipboardData(text: '4123 8901 2345 2026'));
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: const Text('Nomor kartu disalin', style: TextStyle(fontFamily: 'Inter', color: Colors.black)),
-                      backgroundColor: AppColors.neonGreen,
+                      content: const Text('Nomor kartu disalin', style: TextStyle(fontFamily: 'Inter', color: Colors.white)),
+                      backgroundColor: AppColors.bluePrimary,
                       behavior: SnackBarBehavior.floating,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       duration: const Duration(seconds: 2),
                     ),
                   );
                 },
-                child: const Icon(Icons.copy_rounded, color: AppColors.neonGreen, size: 20),
+                child: const Icon(Icons.copy_rounded, color: AppColors.bluePrimary, size: 20),
               ),
             ],
           ),

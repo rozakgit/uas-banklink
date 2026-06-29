@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +9,7 @@ import '../../../domain/entities/transaction_entity.dart';
 import '../../blocs/account/account_bloc.dart';
 import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/notification/notification_bloc.dart';
+import '../../blocs/theme/theme_cubit.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../widgets/app_avatar.dart';
 
@@ -32,13 +32,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, authState) {
         final user = authState is AuthAuthenticated ? authState.user : null;
         final fullName = user?.name ?? 'User';
 
         return Scaffold(
-          backgroundColor: AppColors.bg,
           body: BlocBuilder<AccountBloc, AccountState>(
             builder: (context, accountState) {
               final balance = accountState is AccountLoaded ? accountState.account.balance : 0.0;
@@ -46,56 +47,72 @@ class _HomePageState extends State<HomePage> {
               
               return RefreshIndicator(
                 onRefresh: () async => context.read<AccountBloc>().add(AccountRefreshRequested()),
-                color: AppColors.bg,
-                backgroundColor: AppColors.primary,
+                color: AppColors.bluePrimary,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Stack(
                     children: [
-                      // Top Massive Green Container
+                      // Background Top Gradient
                       Container(
-                        padding: EdgeInsets.fromLTRB(20, MediaQuery.of(context).padding.top + 16, 20, 24),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFFAACF31), // Darker green from user
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(40),
-                            bottomRight: Radius.circular(40),
+                        height: 280,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: isDark
+                                ? [AppColors.bluePrimary.withOpacity(0.4), Colors.transparent]
+                                : [AppColors.blueLight.withOpacity(0.5), Colors.transparent],
                           ),
-                        ),
-                        child: Column(
-                          children: [
-                            _buildHeader(fullName),
-                            const SizedBox(height: 24),
-                            _buildDanantaraCard(balance, user),
-                            const SizedBox(height: 24),
-                            _buildQuickActions(context),
-                            const SizedBox(height: 8),
-                            // Downward indicator tab
-                            Container(
-                              width: 40,
-                              height: 6,
-                              decoration: BoxDecoration(
-                                color: AppColors.bg.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                          ],
                         ),
                       ),
                       
-                      // Bottom Dark Section
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildPPOBGrid(),
-                            const SizedBox(height: 20),
-                            _buildRecentTransactions(txns),
-                            const SizedBox(height: 100),
-                          ],
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // App Bar Area
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(24, MediaQuery.of(context).padding.top + 16, 24, 20),
+                            child: _buildTopHeader(fullName, isDark),
+                          ),
+                          
+                          // Balance Card (Floating)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: _buildBalanceCard(balance, user),
+                          ),
+                          
+                          const SizedBox(height: 24),
+                          
+                          // Services (PPOB Grid)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: _buildServicesGrid(isDark),
+                          ),
+                          
+                          const SizedBox(height: 32),
+                          
+                          // Recent Transactions (Bottom Sheet Style)
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(32),
+                                topRight: Radius.circular(32),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: isDark ? Colors.black26 : Colors.black.withOpacity(0.04),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, -5),
+                                ),
+                              ],
+                            ),
+                            padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
+                            child: _buildTransactionList(txns, isDark),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -108,43 +125,57 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildHeader(String fullName) {
+  Widget _buildTopHeader(String fullName, bool isDark) {
+    final textColor = isDark ? Colors.white : AppColors.lightTextPrimary;
+    final subtitleColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+
     return Row(
       children: [
-        Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: AppColors.bg, width: 2), // Changed to dark border
-              ),
-              child: AppAvatar(name: fullName, size: 32, bg: Colors.transparent),
-            ),
-            Positioned(
-              bottom: -2,
-              right: -2,
-              child: Container(
-                padding: const EdgeInsets.all(2),
-                decoration: const BoxDecoration(
-                  color: AppColors.bg, // Dark verified badge
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.verified, size: 10, color: AppColors.primary),
-              ),
-            ),
-          ],
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: AppColors.bluePrimary.withOpacity(0.5), width: 2),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.bluePrimary.withOpacity(0.2),
+                blurRadius: 10,
+                spreadRadius: 2,
+              )
+            ]
+          ),
+          child: AppAvatar(name: fullName, size: 44, bg: Colors.transparent),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 14),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(fullName, style: const TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black)),
-              const Text('@danantara_user', style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: Colors.black54)),
+              Text('Welcome back,', style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: subtitleColor)),
+              Text(fullName, style: TextStyle(fontFamily: 'Inter', fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
             ],
           ),
         ),
+        // Theme Switcher
+        GestureDetector(
+          onTap: () => context.read<ThemeCubit>().toggleTheme(),
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: isDark ? Colors.black38 : Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: isDark ? [] : AppColors.shadowCardLight,
+              border: Border.all(color: isDark ? Colors.white12 : Colors.transparent),
+            ),
+            child: Icon(
+              isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+              color: isDark ? Colors.amber : AppColors.bluePrimary,
+              size: 22,
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        // Notifications
         GestureDetector(
           onTap: () async {
             await context.push('/notification');
@@ -156,7 +187,36 @@ class _HomePageState extends State<HomePage> {
               if (state is NotificationLoaded) {
                 hasUnread = state.notifications.any((n) => !n.isRead);
               }
-              return _buildIconBtn(Icons.notifications, hasUnread);
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.black38 : Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: isDark ? [] : AppColors.shadowCardLight,
+                      border: Border.all(color: isDark ? Colors.white12 : Colors.transparent),
+                    ),
+                    child: Icon(Icons.notifications_rounded, color: isDark ? Colors.white : AppColors.lightTextPrimary, size: 22),
+                  ),
+                  if (hasUnread)
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        width: 14,
+                        height: 14,
+                        decoration: BoxDecoration(
+                          color: AppColors.danger,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 2),
+                        ),
+                      ),
+                    ),
+                ],
+              );
             },
           ),
         ),
@@ -164,41 +224,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildIconBtn(IconData icon, [bool hasUnread = false]) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Container(
-          width: 32,
-          height: 32,
-          decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.8), // Dark icons on green background
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Icon(icon, color: AppColors.primary, size: 16),
-        ),
-        if (hasUnread)
-          Positioned(
-            top: -2,
-            right: -2,
-            child: Container(
-              width: 10,
-              height: 10,
-              decoration: BoxDecoration(
-                color: Colors.redAccent,
-                shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFFAACF31), width: 1.5),
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildDanantaraCard(double balance, UserEntity? user) {
-    // Gunakan nomor rekening asli atau fallback 2362000 jika null
+  Widget _buildBalanceCard(double balance, UserEntity? user) {
     final String rawAccountNo = user?.accountNumber ?? "2362000";
-    // Format sebagai "2362 XXX"
     final String accountNo = rawAccountNo.length == 7 
         ? "${rawAccountNo.substring(0, 4)} ${rawAccountNo.substring(4)}" 
         : rawAccountNo;
@@ -206,299 +233,281 @@ class _HomePageState extends State<HomePage> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF2B2B2B), // Deep obsidian
-            Color(0xFF111111),
-            Color(0xFF050505),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.15), width: 1),
+        gradient: AppColors.blueGradient,
+        borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.4),
+            color: AppColors.bluePrimary.withOpacity(0.4),
+            blurRadius: 24,
+            spreadRadius: 2,
             offset: const Offset(0, 10),
-            blurRadius: 20,
-          ),
+          )
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Stack(
         children: [
-          // Left Column
-          Expanded(
+          // Decorative background circles
+          Positioned(
+            right: -20,
+            top: -20,
+            child: Container(
+              width: 150,
+              height: 150,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.1),
+              ),
+            ),
+          ),
+          Positioned(
+            left: -40,
+            bottom: -40,
+            child: Container(
+              width: 150,
+              height: 150,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.05),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Total Saldo',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500, color: Colors.white70),
-                ),
-                const SizedBox(height: 6),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Total Balance',
+                      style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: Colors.white70),
+                    ),
+                    Icon(Icons.wifi_rounded, color: Colors.white.withOpacity(0.5), size: 24),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
                       _hideBalance ? CurrencyFormatter.maskBalance() : CurrencyFormatter.format(balance),
-                      style: const TextStyle(fontFamily: 'Poppins', fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: -0.5),
+                      style: const TextStyle(fontFamily: 'Inter', fontSize: 36, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -1),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 12),
                     GestureDetector(
                       onTap: () => setState(() => _hideBalance = !_hideBalance),
-                      child: Icon(_hideBalance ? Icons.visibility_off : Icons.visibility, color: Colors.white54, size: 20),
+                      child: Icon(_hideBalance ? Icons.visibility_off_rounded : Icons.visibility_rounded, color: Colors.white70, size: 22),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                const Text(
-                  'Nomor Rekening',
-                  style: TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.w500, color: Colors.white54),
-                ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 28),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(
-                      accountNo,
-                      style: const TextStyle(
-                        fontFamily: 'monospace',
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
-                        color: Color(0xFFD1D1D1),
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Account Number',
+                          style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: Colors.white54),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Text(
+                              accountNo,
+                              style: const TextStyle(
+                                fontFamily: 'monospace',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 2,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            GestureDetector(
+                              onTap: () {
+                                Clipboard.setData(ClipboardData(text: rawAccountNo));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Nomor rekening disalin!'),
+                                    backgroundColor: AppColors.bluePrimary,
+                                  ),
+                                );
+                              },
+                              child: const Icon(Icons.copy_rounded, color: Colors.white70, size: 18),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 8),
+                    // Glassmorphic Quick Action button inside card
                     GestureDetector(
-                      onTap: () {
-                        Clipboard.setData(ClipboardData(text: rawAccountNo));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Nomor rekening disalin!'),
-                            backgroundColor: AppColors.neonGreen,
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
-                          ),
-                        );
-                      },
-                      child: const Icon(Icons.copy_rounded, color: AppColors.neonGreen, size: 16),
+                      onTap: () => context.go('/transfer'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
+                        ),
+                        child: const Row(
+                          children: [
+                            Icon(Icons.send_rounded, color: Colors.white, size: 16),
+                            SizedBox(width: 6),
+                            Text('Send', style: TextStyle(fontFamily: 'Inter', fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          
-          // Right Column
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Logo
-              Row(
-                children: [
-                  Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      color: Colors.redAccent.withOpacity(0.9),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  Transform.translate(
-                    offset: const Offset(-8, 0),
-                    child: Container(
-                      width: 20,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        color: Colors.orangeAccent.withOpacity(0.9),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 32),
-              // Golden Chip
-              Container(
-                width: 34,
-                height: 26,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFE0C879), Color(0xFFA67C00)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: Colors.black38, width: 1),
-                ),
-                child: Center(
-                  child: Container(
-                    width: 18,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black26, width: 1),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildQuickActions(BuildContext context) {
+  Widget _buildServicesGrid(bool isDark) {
     final actions = [
-      {'icon': Icons.arrow_outward, 'label': 'Kirim', 'route': '/transfer'},
-      {'icon': Icons.call_received, 'label': 'Minta', 'route': '/topup'},
-      {'icon': Icons.qr_code_scanner, 'label': 'Bayar', 'route': '/payment'},
-      {'icon': Icons.account_balance_wallet, 'label': 'Tarik', 'route': '/topup'},
+      {'icon': Icons.account_balance_wallet_rounded, 'label': 'Top Up', 'route': '/topup'},
+      {'icon': Icons.phone_android_rounded, 'label': 'Pulsa/Data', 'route': null},
+      {'icon': Icons.bolt_rounded, 'label': 'Listrik', 'route': null},
+      {'icon': Icons.water_drop_rounded, 'label': 'PDAM', 'route': null},
+      {'icon': Icons.wifi_rounded, 'label': 'Internet', 'route': null},
+      {'icon': Icons.health_and_safety_rounded, 'label': 'BPJS', 'route': null},
+      {'icon': Icons.school_rounded, 'label': 'Pendidikan', 'route': null},
+      {'icon': Icons.grid_view_rounded, 'label': 'Lainnya', 'route': null},
     ];
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Wrap(
+      spacing: 16,
+      runSpacing: 20,
+      alignment: WrapAlignment.spaceBetween,
       children: actions.map((a) {
-        return Column(
-          children: [
-            GestureDetector(
-              onTap: () => context.go(a['route'] as String),
-              child: Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.85),
-                  borderRadius: BorderRadius.circular(16),
+        final w = (MediaQuery.of(context).size.width - 48 - (16 * 3)) / 4; // 4 columns
+        return GestureDetector(
+          onTap: a['route'] != null ? () => context.go(a['route'] as String) : null,
+          child: SizedBox(
+            width: w,
+            child: Column(
+              children: [
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: isDark ? [] : AppColors.shadowCardLight,
+                    border: Border.all(color: isDark ? Colors.white12 : Colors.transparent),
+                  ),
+                  child: Icon(a['icon'] as IconData, color: AppColors.bluePrimary, size: 26),
                 ),
-                child: Icon(a['icon'] as IconData, color: const Color(0xFFDFF26E), size: 24),
-              ),
+                const SizedBox(height: 10),
+                Text(
+                  a['label'] as String, 
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontFamily: 'Inter', fontSize: 11.5, fontWeight: FontWeight.w600, color: isDark ? Colors.white70 : AppColors.lightTextPrimary)
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(a['label'] as String, style: const TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.bold, color: Colors.black)),
-          ],
+          ),
         );
       }).toList(),
     );
   }
 
-  // Removed _buildFavouriteContacts() as requested
-
-  Widget _buildPPOBGrid() {
-    final actions = [
-      {'icon': Icons.phone_android, 'label': 'Pulsa'},
-      {'icon': Icons.bolt, 'label': 'PLN'},
-      {'icon': Icons.water_drop, 'label': 'PDAM'},
-      {'icon': Icons.health_and_safety, 'label': 'BPJS'},
-      {'icon': Icons.wifi, 'label': 'Internet'},
-      {'icon': Icons.tv, 'label': 'TV Kabel'},
-      {'icon': Icons.train, 'label': 'Tiket'},
-      {'icon': Icons.more_horiz, 'label': 'Lainnya'},
-    ];
-
+  Widget _buildTransactionList(List<TransactionEntity> txns, bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text('Pembayaran', style: TextStyle(fontFamily: 'Poppins', fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)), // Improved contrast
-            GestureDetector(
-              onTap: () {},
-              child: const Text('Lihat Semua', style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: Color(0xFFDFF26E))),
+        Center(
+          child: Container(
+            width: 40,
+            height: 5,
+            decoration: BoxDecoration(
+              color: isDark ? Colors.white24 : Colors.black12,
+              borderRadius: BorderRadius.circular(10),
             ),
-          ],
-        ),
-        const SizedBox(height: 12), // Reduced spacing from 16 to 12
-        GridView.builder(
-          padding: EdgeInsets.zero, // Remove implicit GridView padding
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 8,
-            childAspectRatio: 0.85,
           ),
-          itemCount: actions.length,
-          itemBuilder: (context, index) {
-            final p = actions[index];
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFDFF26E).withOpacity(0.12), // Slightly more visible background
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Icon(p['icon'] as IconData, color: const Color(0xFFDFF26E), size: 20),
-                ),
-                const SizedBox(height: 6),
-                Text(p['label'] as String, textAlign: TextAlign.center, style: const TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.w500, color: Colors.white70), maxLines: 1, overflow: TextOverflow.ellipsis), // White text for better contrast
-              ],
-            );
-          },
         ),
-      ],
-    );
-  }
-
-
-  Widget _buildRecentTransactions(List<TransactionEntity> txns) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+        const SizedBox(height: 24),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Transaksi Terakhir', style: TextStyle(fontFamily: 'Poppins', fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)), // Improved contrast
+            Text('Recent Transactions', style: TextStyle(fontFamily: 'Inter', fontSize: 18, fontWeight: FontWeight.w800, color: isDark ? Colors.white : AppColors.lightTextPrimary)),
             GestureDetector(
               onTap: () => context.go('/history'),
-              child: const Text('Lihat Semua', style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: Color(0xFFDFF26E))), // Match "Lihat Semua" styling
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.bluePrimary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Text('See All', style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.bluePrimary)),
+              ),
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         txns.isEmpty
-            ? const Center(child: Text('Belum ada transaksi', style: TextStyle(color: AppColors.slate500)))
+            ? Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: Column(
+                    children: [
+                      Icon(Icons.receipt_long_rounded, size: 48, color: isDark ? Colors.white24 : Colors.black12),
+                      const SizedBox(height: 16),
+                      Text('No transactions yet', style: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
+                    ],
+                  ),
+                ),
+              )
             : Column(
-                children: txns.take(4).map((txn) {
+                children: txns.take(5).map((txn) {
                   final isIncome = txn.isCredit;
                   
                   return Container(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    padding: const EdgeInsets.all(12),
+                    margin: const EdgeInsets.only(bottom: 16),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3), // Darker transparent card
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: Colors.white.withOpacity(0.05)),
+                      color: isDark ? Colors.black.withOpacity(0.2) : Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: isDark ? Colors.white12 : AppColors.lightLine),
                     ),
                     child: Row(
                       children: [
                         Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(10)),
-                          child: Icon(isIncome ? Icons.arrow_downward : Icons.arrow_upward, size: 18, color: isIncome ? const Color(0xFFDFF26E) : Colors.redAccent),
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            gradient: isIncome 
+                                ? LinearGradient(colors: [AppColors.success.withOpacity(0.2), AppColors.success.withOpacity(0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight)
+                                : LinearGradient(colors: [AppColors.danger.withOpacity(0.2), AppColors.danger.withOpacity(0.05)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: isIncome ? AppColors.success.withOpacity(0.3) : AppColors.danger.withOpacity(0.3)),
+                          ),
+                          child: Icon(isIncome ? Icons.arrow_downward_rounded : Icons.arrow_upward_rounded, size: 20, color: isIncome ? AppColors.success : AppColors.danger),
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 16),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(txn.description, style: const TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white)),
-                              const SizedBox(height: 2),
-                              Text('Trx ID: ${txn.id.toString()}', style: const TextStyle(fontFamily: 'Inter', fontSize: 10, color: Colors.white54)),
+                              Text(txn.description, style: TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w700, color: isDark ? Colors.white : AppColors.lightTextPrimary)),
+                              const SizedBox(height: 4),
+                              Text('ID: ${txn.id}', style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)),
                             ],
                           ),
                         ),
                         Text('${isIncome ? '+' : '-'}${CurrencyFormatter.format(txn.amount.abs())}', 
-                          style: TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.bold, color: isIncome ? const Color(0xFFDFF26E) : Colors.redAccent)),
+                          style: TextStyle(fontFamily: 'Inter', fontSize: 15, fontWeight: FontWeight.w800, color: isIncome ? AppColors.success : AppColors.lightTextPrimary)),
                       ],
                     ),
                   );
@@ -507,5 +516,4 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-
 }

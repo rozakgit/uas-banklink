@@ -58,6 +58,8 @@ class _CodeInputState extends State<CodeInput> {
   Widget build(BuildContext context) {
     const maxBoxSize = 46.0;
     const horizontalMargin = 4.5;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : AppColors.darkSurface;
 
     return GestureDetector(
       onTap: () {
@@ -104,31 +106,31 @@ class _CodeInputState extends State<CodeInput> {
                     height: boxSize > 40 ? 56 : boxSize + 10,
                     margin: const EdgeInsets.symmetric(horizontal: horizontalMargin),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3),
+                      color: isDark ? Colors.black.withValues(alpha: 0.3) : Colors.black.withValues(alpha: 0.03),
                       borderRadius: BorderRadius.circular(13),
                       border: Border.all(
                         color: widget.hasError
-                            ? AppColors.red
+                            ? AppColors.danger
                             : active
-                                ? AppColors.neonGreen
+                                ? AppColors.bluePrimary
                                 : filled
-                                    ? Colors.white54
-                                    : Colors.white24,
+                                    ? (isDark ? Colors.white54 : Colors.black54)
+                                    : (isDark ? Colors.white24 : Colors.black26),
                         width: 1.6,
                       ),
                       boxShadow: active
-                          ? [BoxShadow(color: AppColors.neonGreen.withOpacity(0.1), blurRadius: 0, spreadRadius: 4)]
+                          ? [BoxShadow(color: AppColors.bluePrimary.withValues(alpha: 0.1), blurRadius: 0, spreadRadius: 4)]
                           : [],
                     ),
                     child: Center(
                       child: filled
                           ? Text(
                               widget.value[i],
-                              style: const TextStyle(
-                                fontFamily: 'PlusJakartaSans',
+                              style: TextStyle(
+                                fontFamily: 'Inter',
                                 fontSize: 24,
                                 fontWeight: FontWeight.w700,
-                                color: Colors.white,
+                                color: textColor,
                               ),
                             )
                           : active
@@ -136,7 +138,7 @@ class _CodeInputState extends State<CodeInput> {
                                   width: 2,
                                   height: 24,
                                   decoration: BoxDecoration(
-                                    color: AppColors.neonGreen,
+                                    color: AppColors.bluePrimary,
                                     borderRadius: BorderRadius.circular(2),
                                   ),
                                 )

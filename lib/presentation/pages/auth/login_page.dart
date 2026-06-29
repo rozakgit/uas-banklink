@@ -107,171 +107,228 @@ class _LoginPageState extends State<LoginPage> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.bg,
-        body: SafeArea(
-          child: Column(
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  icon: const Icon(DkgIcons.arrowLeft, color: Colors.white),
-                  onPressed: () => context.go('/'),
+        body: Stack(
+          children: [
+            // Background Gradient & Abstract Shapes
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AppColors.darkSurface, Color(0xFF0F172A)],
                 ),
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.fromLTRB(26, 10, 26, 24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const AppLogo(size: 50, light: true),
-                      const SizedBox(height: 22),
-                      const Text('Masuk',
-                          style: TextStyle(
-                            fontFamily: 'PlusJakartaSans',
-                            fontSize: 27,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
-                            letterSpacing: -0.4,
-                          )),
-                      const SizedBox(height: 6),
-                      const Text('Selamat datang kembali',
-                          style: TextStyle(fontSize: 14.5, color: Colors.white70)),
-                      const SizedBox(height: 24),
-                      // Google sign in
-                      BlocBuilder<AuthBloc, AuthState>(
-                        builder: (context, state) {
-                          final loading = state is AuthLoading || _gLoading;
-                          return GestureDetector(
-                            onTap: loading ? null : _loginWithGoogle,
-                            child: Container(
-                              height: 54,
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(color: Colors.white24, width: 1.5),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: loading
-                                    ? const [
-                                        SizedBox(
-                                          width: 20,
-                                          height: 20,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2.4,
-                                            valueColor: AlwaysStoppedAnimation(AppColors.neonGreen),
-                                          ),
-                                        ),
-                                        SizedBox(width: 11),
-                                        Text('Menghubungkan…',
-                                            style: TextStyle(
-                                              fontFamily: 'PlusJakartaSans',
-                                              fontSize: 15.5,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.white,
-                                            )),
-                                      ]
-                                    : const [
-                                        _GoogleIcon(),
-                                        SizedBox(width: 11),
-                                        Text('Lanjut dengan Google',
-                                            style: TextStyle(
-                                              fontFamily: 'PlusJakartaSans',
-                                              fontSize: 15.5,
-                                              fontWeight: FontWeight.w700,
-                                              color: Colors.white,
-                                            )),
-                                      ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 22),
-                      Row(children: [
-                        const Expanded(child: Divider(color: Colors.white24)),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: const Text('atau email',
-                              style: TextStyle(
-                                fontFamily: 'PlusJakartaSans',
-                                fontSize: 12.5,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white54,
-                              )),
-                        ),
-                        const Expanded(child: Divider(color: Colors.white24)),
-                      ]),
-                      const SizedBox(height: 22),
-                      AppField(
-                        label: 'Email',
-                        value: _email,
-                        onChanged: (v) => setState(() => _email = v),
-                        placeholder: 'nama@email.com',
-                        keyboardType: TextInputType.emailAddress,
-                        prefixIcon: const Icon(DkgIcons.mail, size: 20),
-                      ),
-                      const SizedBox(height: 14),
-                      AppField(
-                        label: 'Kata sandi',
-                        value: _pw,
-                        onChanged: (v) => setState(() => _pw = v),
-                        obscureText: !_showPw,
-                        placeholder: '••••••••',
-                        prefixIcon: const Icon(DkgIcons.lock, size: 20),
-                        suffixIcon: IconButton(
-                          icon: Icon(_showPw ? DkgIcons.eyeOff : DkgIcons.eye,
-                              size: 20, color: Colors.white54),
-                          onPressed: () => setState(() => _showPw = !_showPw),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {},
-                          child: const Text('Lupa kata sandi?',
-                              style: TextStyle(
-                                fontFamily: 'PlusJakartaSans',
-                                color: AppColors.neonGreen,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 13.5,
-                              )),
-                        ),
-                      ),
-                      const SizedBox(height: 18),
-                      BlocBuilder<AuthBloc, AuthState>(
-                        builder: (context, state) => AppButton(
-                          label: 'Masuk',
-                          variant: AppButtonVariant.primary,
-                          onPressed: _valid ? _loginWithEmail : null,
-                          isLoading: state is AuthLoading,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('Belum punya akun? ',
-                              style: TextStyle(fontSize: 14, color: Colors.white70)),
-                          GestureDetector(
-                            onTap: () => context.go('/register'),
-                            child: const Text('Daftar',
-                                style: TextStyle(
-                                  fontFamily: 'PlusJakartaSans',
-                                  color: AppColors.neonGreen,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14,
-                                )),
-                          ),
-                        ],
-                      ),
-                    ],
+            ),
+            Positioned(
+              top: -100,
+              right: -50,
+              child: Container(
+                width: 300,
+                height: 300,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.bluePrimary.withOpacity(0.15),
+                  boxShadow: [BoxShadow(color: AppColors.bluePrimary.withOpacity(0.2), blurRadius: 100, spreadRadius: 50)],
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: -100,
+              left: -50,
+              child: Container(
+                width: 250,
+                height: 250,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color(0xFF7C3AED).withOpacity(0.15),
+                  boxShadow: [BoxShadow(color: const Color(0xFF7C3AED).withOpacity(0.2), blurRadius: 100, spreadRadius: 50)],
+                ),
+              ),
+            ),
+
+            SafeArea(
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+                      onPressed: () => context.go('/'),
+                    ),
                   ),
-                ),
+                  Expanded(
+                    child: Center(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                        child: Container(
+                          padding: const EdgeInsets.all(28),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.03),
+                            borderRadius: BorderRadius.circular(32),
+                            border: Border.all(color: Colors.white.withOpacity(0.08)),
+                            boxShadow: [
+                              BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 30, spreadRadius: 5)
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Center(child: const AppLogo(size: 56, light: true)),
+                              const SizedBox(height: 32),
+                              const Text('Welcome Back',
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.white,
+                                    letterSpacing: -0.5,
+                                  )),
+                              const SizedBox(height: 8),
+                              const Text('Sign in to continue your finance journey',
+                                  style: TextStyle(fontFamily: 'Inter', fontSize: 14, color: Colors.white70)),
+                              const SizedBox(height: 32),
+                              
+                              AppField(
+                                label: 'Email Address',
+                                value: _email,
+                                onChanged: (v) => setState(() => _email = v),
+                                placeholder: 'nama@email.com',
+                                keyboardType: TextInputType.emailAddress,
+                                prefixIcon: const Icon(Icons.mail_rounded, size: 20),
+                              ),
+                              const SizedBox(height: 16),
+                              AppField(
+                                label: 'Password',
+                                value: _pw,
+                                onChanged: (v) => setState(() => _pw = v),
+                                obscureText: !_showPw,
+                                placeholder: '••••••••',
+                                prefixIcon: const Icon(Icons.lock_rounded, size: 20),
+                                suffixIcon: IconButton(
+                                  icon: Icon(_showPw ? Icons.visibility_off_rounded : Icons.visibility_rounded,
+                                      size: 20, color: Colors.white54),
+                                  onPressed: () => setState(() => _showPw = !_showPw),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
+                                  onPressed: () {},
+                                  child: const Text('Forgot Password?',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        color: AppColors.bluePrimary,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 13,
+                                      )),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              BlocBuilder<AuthBloc, AuthState>(
+                                builder: (context, state) => AppButton(
+                                  label: 'Sign In',
+                                  variant: AppButtonVariant.primary,
+                                  onPressed: _valid ? _loginWithEmail : null,
+                                  isLoading: state is AuthLoading && !_gLoading,
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              Row(children: [
+                                Expanded(child: Divider(color: Colors.white.withOpacity(0.1))),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  child: const Text('Or continue with',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white54,
+                                      )),
+                                ),
+                                Expanded(child: Divider(color: Colors.white.withOpacity(0.1))),
+                              ]),
+                              const SizedBox(height: 24),
+                              // Google sign in
+                              BlocBuilder<AuthBloc, AuthState>(
+                                builder: (context, state) {
+                                  final loading = state is AuthLoading || _gLoading;
+                                  return GestureDetector(
+                                    onTap: loading ? null : _loginWithGoogle,
+                                    child: Container(
+                                      height: 54,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.05),
+                                        borderRadius: BorderRadius.circular(16),
+                                        border: Border.all(color: Colors.white.withOpacity(0.1), width: 1),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: loading
+                                            ? const [
+                                                SizedBox(
+                                                  width: 20,
+                                                  height: 20,
+                                                  child: CircularProgressIndicator(
+                                                    strokeWidth: 2.4,
+                                                    valueColor: AlwaysStoppedAnimation(Colors.white),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 12),
+                                                Text('Connecting...',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Inter',
+                                                      fontSize: 15,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: Colors.white,
+                                                    )),
+                                              ]
+                                            : const [
+                                                _GoogleIcon(),
+                                                SizedBox(width: 12),
+                                                Text('Google',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Inter',
+                                                      fontSize: 15,
+                                                      fontWeight: FontWeight.w600,
+                                                      color: Colors.white,
+                                                    )),
+                                              ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Don't have an account? ",
+                            style: TextStyle(fontFamily: 'Inter', fontSize: 13, color: Colors.white54)),
+                        GestureDetector(
+                          onTap: () => context.go('/register'),
+                          child: const Text('Sign Up',
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                color: AppColors.bluePrimary,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13,
+                              )),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -44,7 +44,7 @@ class _TransferPageState extends State<TransferPage> {
         final recipient = {
           'id': data['account_number'],
           'name': data['name'],
-          'sub': 'Rekening Danantara: ${data['account_number']}',
+          'sub': 'Rekening Bankling: ${data['account_number']}',
         };
         context.go('/transfer/amount', extra: {'recipient': recipient, 'channel': 'dkg'});
       }
@@ -61,16 +61,17 @@ class _TransferPageState extends State<TransferPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.bg,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back_rounded, color: isDark ? Colors.white : AppColors.lightTextPrimary),
           onPressed: () => context.go('/home'),
         ),
-        title: const Text('Kirim Uang', style: TextStyle(fontFamily: 'Poppins', color: Colors.white, fontWeight: FontWeight.bold)),
+        title: Text('Transfer', style: TextStyle(fontFamily: 'Inter', color: isDark ? Colors.white : AppColors.lightTextPrimary, fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: Column(
@@ -80,26 +81,26 @@ class _TransferPageState extends State<TransferPage> {
             child: Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.white12,
+                color: isDark ? Colors.white12 : AppColors.lightLine,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Row(
                 children: [
-                  _buildTab('Danantara', 'dkg'),
-                  _buildTab('Bank', 'bank'),
+                  _buildTab('Bankling', 'dkg', isDark),
+                  _buildTab('Bank', 'bank', isDark),
                 ],
               ),
             ),
           ),
           Expanded(
-            child: _tab == 'dkg' ? _buildDkgTab() : _buildBanksTab(),
+            child: _tab == 'dkg' ? _buildDkgTab(isDark) : _buildBanksTab(isDark),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTab(String label, String value) {
+  Widget _buildTab(String label, String value, bool isDark) {
     final active = _tab == value;
     return Expanded(
       child: GestureDetector(
@@ -107,15 +108,16 @@ class _TransferPageState extends State<TransferPage> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: active ? AppColors.neonGreen : Colors.transparent,
+            gradient: active ? AppColors.blueGradient : null,
+            color: active ? null : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: active ? [BoxShadow(color: AppColors.neonGreen.withOpacity(0.3), blurRadius: 8)] : null,
+            boxShadow: active ? [BoxShadow(color: AppColors.bluePrimary.withOpacity(0.3), blurRadius: 8)] : null,
           ),
           child: Center(
             child: Text(label, style: TextStyle(
               fontFamily: 'Inter',
               fontWeight: FontWeight.bold,
-              color: active ? Colors.black : Colors.white70,
+              color: active ? Colors.white : (isDark ? Colors.white70 : AppColors.lightTextSecondary),
             )),
           ),
         ),
@@ -123,13 +125,13 @@ class _TransferPageState extends State<TransferPage> {
     );
   }
 
-  Widget _buildDkgTab() {
+  Widget _buildDkgTab(bool isDark) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Kirim ke Sesama Danantara', style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+          Text('Kirim ke Sesama Bankling', style: TextStyle(fontFamily: 'Inter', fontSize: 16, fontWeight: FontWeight.bold, color: isDark ? Colors.white : AppColors.lightTextPrimary)),
           const SizedBox(height: 16),
           AppField(
             label: 'Nomor Rekening',
@@ -146,7 +148,7 @@ class _TransferPageState extends State<TransferPage> {
           ),
           if (_errorMsg != null) ...[
             const SizedBox(height: 8),
-            Text(_errorMsg!, style: const TextStyle(color: AppColors.red, fontSize: 12)),
+            Text(_errorMsg!, style: const TextStyle(color: AppColors.danger, fontSize: 12)),
           ],
           const SizedBox(height: 24),
           AppButton(
@@ -159,9 +161,9 @@ class _TransferPageState extends State<TransferPage> {
     );
   }
 
-  Widget _buildBanksTab() {
-    return const Center(
-      child: Text('Daftar Bank belum tersedia.', style: TextStyle(color: Colors.white54)),
+  Widget _buildBanksTab(bool isDark) {
+    return Center(
+      child: Text('Daftar Bank belum tersedia.', style: TextStyle(color: isDark ? Colors.white54 : AppColors.lightTextSecondary)),
     );
   }
 }

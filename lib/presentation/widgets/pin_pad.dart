@@ -33,6 +33,7 @@ class PinPad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'bio', '0', 'del'];
 
     return Column(
@@ -48,9 +49,9 @@ class PinPad extends StatelessWidget {
               margin: const EdgeInsets.symmetric(horizontal: 7),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: filled ? AppColors.neonGreen : Colors.transparent,
+                color: filled ? AppColors.bluePrimary : Colors.transparent,
                 border: Border.all(
-                  color: filled ? AppColors.neonGreen : Colors.white24,
+                  color: filled ? AppColors.bluePrimary : (isDark ? Colors.white24 : Colors.black26),
                   width: 2,
                 ),
               ),
@@ -70,29 +71,32 @@ class PinPad extends StatelessWidget {
             if (k == 'bio') {
               return _KeyButton(
                 onTap: () => onBiometric?.call(),
-                child: const Icon(Icons.fingerprint_rounded, size: 28, color: AppColors.neonGreen),
+                isDark: isDark,
+                child: const Icon(Icons.fingerprint_rounded, size: 28, color: AppColors.bluePrimary),
               );
             }
             if (k == 'del') {
               return _KeyButton(
                 onTap: () => _press('del'),
-                child: const Icon(Icons.arrow_back_ios_rounded, size: 22, color: Colors.white54),
+                isDark: isDark,
+                child: Icon(Icons.arrow_back_ios_new_rounded, size: 22, color: isDark ? Colors.white54 : Colors.black54),
               );
             }
             return _KeyButton(
               onTap: () => _press(k),
+              isDark: isDark,
               child: Text(
                 k,
-                style: const TextStyle(
-                  fontFamily: 'monospace',
+                style: TextStyle(
+                  fontFamily: 'Inter',
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.5,
-                  color: Color(0xFFD1D1D1),
-                  shadows: [
+                  color: isDark ? Colors.white : AppColors.darkSurface,
+                  shadows: isDark ? const [
                     Shadow(color: Colors.white24, offset: Offset(1, 1), blurRadius: 1),
                     Shadow(color: Colors.black87, offset: Offset(-1, -1), blurRadius: 1),
-                  ],
+                  ] : null,
                 ),
               ),
             );
@@ -106,8 +110,9 @@ class PinPad extends StatelessWidget {
 class _KeyButton extends StatelessWidget {
   final VoidCallback onTap;
   final Widget child;
+  final bool isDark;
 
-  const _KeyButton({required this.onTap, required this.child});
+  const _KeyButton({required this.onTap, required this.child, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
@@ -116,9 +121,9 @@ class _KeyButton extends StatelessWidget {
       child: Container(
         height: 62,
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.85), // Darker background to match home screen quick actions
+          color: isDark ? Colors.black.withValues(alpha: 0.3) : Colors.black.withValues(alpha: 0.03),
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.white.withOpacity(0.05)), // Subtle border
+          border: Border.all(color: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05)),
         ),
         child: Center(child: child),
       ),

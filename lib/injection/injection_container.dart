@@ -34,10 +34,15 @@ import '../presentation/blocs/auth/auth_bloc.dart';
 import '../presentation/blocs/auth/otp_bloc.dart';
 import '../presentation/blocs/payment/payment_bloc.dart';
 import '../presentation/blocs/notification/notification_bloc.dart';
+import '../presentation/blocs/theme/theme_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton(() => sharedPreferences);
+
   // External
   const secureStorage = FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
@@ -138,6 +143,7 @@ Future<void> init() async {
   sl.registerFactory(() => NotificationBloc(
         repository: sl(),
       ));
+  sl.registerLazySingleton(() => ThemeCubit(prefs: sl()));
 }
 
 /// Call this after login to set the JWT token in the API client

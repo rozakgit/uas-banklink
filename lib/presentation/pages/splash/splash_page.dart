@@ -70,37 +70,47 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.bg,
-        body: SafeArea(
-          child: Stack(
-            children: [
-              // Decorative circles
-              Positioned(
-                top: -120,
-                right: -90,
-                child: Container(
-                  width: 320,
-                  height: 320,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.neonGreen.withOpacity(0.03),
-                  ),
+        body: Stack(
+          children: [
+            // Background Gradient & Abstract Shapes
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AppColors.darkSurface, Color(0xFF0F172A)],
                 ),
               ),
-              Positioned(
-                bottom: 120,
-                left: -100,
-                child: Container(
-                  width: 220,
-                  height: 220,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.neonGreen.withOpacity(0.02),
-                  ),
+            ),
+            Positioned(
+              top: -100,
+              right: -50,
+              child: Container(
+                width: 300,
+                height: 300,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.bluePrimary.withOpacity(0.15),
+                  boxShadow: [BoxShadow(color: AppColors.bluePrimary.withOpacity(0.2), blurRadius: 100, spreadRadius: 50)],
                 ),
               ),
-              // Animated Content
-              Padding(
+            ),
+            Positioned(
+              bottom: -100,
+              left: -50,
+              child: Container(
+                width: 250,
+                height: 250,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color(0xFF7C3AED).withOpacity(0.15),
+                  boxShadow: [BoxShadow(color: const Color(0xFF7C3AED).withOpacity(0.2), blurRadius: 100, spreadRadius: 50)],
+                ),
+              ),
+            ),
+            // Animated Content
+            SafeArea(
+              child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 28),
                 child: FadeTransition(
                   opacity: _fadeAnimation,
@@ -112,32 +122,32 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
                         const AppLogo(size: 92, light: true),
                         const SizedBox(height: 26),
                         const Text(
-                          'Danantara',
+                          'Bankling',
                           style: TextStyle(
-                            fontFamily: 'PlusJakartaSans',
-                            fontSize: 30,
+                            fontFamily: 'Inter',
+                            fontSize: 32,
                             fontWeight: FontWeight.w800,
                             color: Colors.white,
                             letterSpacing: -0.5,
                           ),
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 4),
                         const Text(
-                          'GLOBAL',
+                          'FINANCE',
                           style: TextStyle(
-                            fontFamily: 'PlusJakartaSans',
-                            fontSize: 18,
+                            fontFamily: 'Inter',
+                            fontSize: 16,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.neonGreen,
-                            letterSpacing: 3,
+                            color: AppColors.bluePrimary,
+                            letterSpacing: 4,
                           ),
                         ),
                         const SizedBox(height: 16),
                         const Text(
-                          'Bayar, transfer, dan kelola uang kuliah\ndalam satu aplikasi yang aman.',
+                          'Bayar, transfer, dan kelola uang kamu\ndalam satu aplikasi yang aman.',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontFamily: 'PlusJakartaSans',
+                            fontFamily: 'Inter',
                             fontSize: 15,
                             color: Colors.white70,
                             height: 1.5,
@@ -165,8 +175,8 @@ class _SplashPageState extends State<SplashPage> with SingleTickerProviderStateM
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
