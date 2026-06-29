@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCWAzGMTyg1uSspi1qfno71sj4iCfp7qGk',
-    appId: '1:948878883710:android:516b94bdc2276b68a0512f',
-    messagingSenderId: '948878883710',
-    projectId: 'fir-emoney-e9256',
-    storageBucket: 'fir-emoney-e9256.firebasestorage.app',
+    apiKey: 'AIzaSyBx5PFoAgcxXy8RE81MT6rMZZxbC_QuBtQ',
+    appId: '1:928261239854:android:4b40242e7cf84e36db9bbf',
+    messagingSenderId: '928261239854',
+    projectId: 'bankling-4212a',
+    storageBucket: 'bankling-4212a.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA46uBUvmVQKsSL7HIXZG58MD9jXQCFX7c',
-    appId: '1:948878883710:ios:5363ad2b9fbe06b2a0512f',
-    messagingSenderId: '948878883710',
-    projectId: 'fir-emoney-e9256',
-    storageBucket: 'fir-emoney-e9256.firebasestorage.app',
-    iosBundleId: 'com.kampus.dompetKampusGlobal',
+    apiKey: 'AIzaSyBx5PFoAgcxXy8RE81MT6rMZZxbC_QuBtQ',
+    appId: '1:928261239854:ios:dummy_ios_app_id',
+    messagingSenderId: '928261239854',
+    projectId: 'bankling-4212a',
+    storageBucket: 'bankling-4212a.firebasestorage.app',
+    iosBundleId: 'com.uas.bankling',
   );
 }
