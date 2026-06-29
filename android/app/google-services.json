@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "928261239854",
+    "project_id": "bankling-4212a",
+    "storage_bucket": "bankling-4212a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:928261239854:android:4b40242e7cf84e36db9bbf",
+        "android_client_info": {
+          "package_name": "com.uas.bankling"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "928261239854-h7bhcb5f6kd7ms0m6ge6m4q1cqevoj06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBx5PFoAgcxXy8RE81MT6rMZZxbC_QuBtQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "928261239854-h7bhcb5f6kd7ms0m6ge6m4q1cqevoj06.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
