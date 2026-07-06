@@ -3,7 +3,7 @@
 **Bankling** adalah aplikasi dompet digital (e-Wallet) dan Fintech modern yang dibangun menggunakan framework **Flutter** dan **Dart**. Aplikasi ini dirancang dengan standar kualitas production-ready yang berfokus pada keamanan tinggi, performa, dan antarmuka pengguna (UI/UX) yang mulus.
 
 ## Referensi Terkait
-- **Video Presentasi**: [Tautan YouTube](https://youtube.com/)
+- **Video Presentasi**: [Tautan YouTube](https://youtu.be/fpIjc-MfboQ?si=uEhHx7M2keDrp_qA)
 - **Toko E-Commerce (Klien)**: [TopiZak_Store](https://github.com/rozakgit/TopiZak_Store.git)
 - **Backend API**: [be-bankling](https://github.com/rozakgit/be-bankling.git)
 
